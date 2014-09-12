@@ -84,7 +84,7 @@ else
     
     % Precalculate the angles for each range
     da = (Lidar_AngleEnd - Lidar_AngleStart) / (Lidar_nPoints - 1);
-    Lidar_Angles = Lidar_AngleStart:da:Lidar_AngleEnd;
+    Lidar_Angles = (Lidar_AngleStart:da:Lidar_AngleEnd)';
     
     % Cleanup workspace
     clearvars fid nLine nScan nPoint tLine items nPoints I da

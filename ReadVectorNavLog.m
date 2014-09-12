@@ -23,7 +23,7 @@ GPS_Altitude  = VectorNav_log(i,8);
 
 % Extract IMU Orientation
 IMU_Timestamp = VectorNav_log(:,1) + VectorNav_log(:,2) * 10E-7;
-IMU_Yaw = deg2rad(VectorNav_log(:,3));
+IMU_Yaw   = deg2rad(VectorNav_log(:,3));
 IMU_Pitch = deg2rad(VectorNav_log(:,4));
 IMU_Roll  = deg2rad(VectorNav_log(:,5));
 
@@ -36,10 +36,8 @@ GPS_MetricPose(:,1) = -1 * GPS_MetricPose(:,1);
 GPS_MetricPose(:,3) = -1 * GPS_MetricPose(:,3);
 
 % Interpolate the GPS pose for each IMU orientation (metric)
-IMU_MetricPose = zeros(size(IMU_Timestamp,1), 3);
-IMU_MetricPose(:,1) = interp1(GPS_Timestamp, GPS_MetricPose(:,1), IMU_Timestamp);
-IMU_MetricPose(:,2) = interp1(GPS_Timestamp, GPS_MetricPose(:,2), IMU_Timestamp);
-IMU_MetricPose(:,3) = interp1(GPS_Timestamp, GPS_MetricPose(:,3), IMU_Timestamp);
+IMU_MetricPose = interp1(GPS_Timestamp, GPS_MetricPose, IMU_Timestamp);
+
 
 % Cleanup workspace
 clear i
