@@ -42,17 +42,17 @@ ReadHokuyoLog
 % %
 % % Show the IMU Data
 % %
-figure(4)
-clf
-subplot(3,1,1);
-plot(IMU_Timestamp, IMU_Pitch, '.r')
-title('IMU Pitch');
-subplot(3,1,2);
-plot(IMU_Timestamp, IMU_Roll, '.g')
-title('GPS Roll');
-subplot(3,1,3);
-plot(IMU_Timestamp, IMU_Yaw, '.b')
-title('IMU Yaw');
+% figure(4)
+% clf
+% subplot(3,1,1);
+% plot(IMU_Timestamp, IMU_Pitch, '.r')
+% title('IMU Pitch');
+% subplot(3,1,2);
+% plot(IMU_Timestamp, IMU_Roll, '.g')
+% title('GPS Roll');
+% subplot(3,1,3);
+% plot(IMU_Timestamp, IMU_Yaw, '.b')
+% title('IMU Yaw');
 % 
 % 
 % 
@@ -70,17 +70,17 @@ title('IMU Yaw');
 % 
 % 
 % Plot all orientations on same spot
-figure(6)
-clf
-PlotPose3D(0,0,0, 0,0,0, 1);
-hold on
-view(63, 24)
-axis([-1 1 -1 1 -1 1])
-title('IMU Orientation')
-grid
-
-zv = zeros(size(IMU_Pitch));
-PlotTraj3D(zv, zv, zv, IMU_Pitch, IMU_Roll, IMU_Yaw, 0.9);
+% figure(6)
+% clf
+% PlotPose3D(0,0,0, 0,0,0, 1);
+% hold on
+% view(63, 24)
+% axis([-1 1 -1 1 -1 1])
+% title('IMU Orientation')
+% grid
+% 
+% zv = zeros(size(IMU_Pitch));
+% PlotTraj3D(zv, zv, zv, IMU_Pitch, IMU_Roll, IMU_Yaw, 0.9);
 % 
 % 
 % 
@@ -154,20 +154,13 @@ T(I) = [];
 % Convert to Cartisian Coordinates
 [X, Y] = pol2cart(A + pi/2, R);
 
-
-% DEBUG ========================================================
-DEBUGroll = interp1(IMU_Timestamp, IMU_Roll, T);
-[X2, Y2] = pol2cart(A + pi/2 - DEBUGroll, R);
-[X3, Y3] = pol2cart(A + pi/2 + DEBUGroll, R);
-% ================================================================
-
-
 % Get the GPS based position of the sensor for each hit
 P = interp1(GPS_Timestamp, GPS_MetricPose, T);
 
 
 % Generate Quaternions for linear interpolation of rotations
-IMU_Q = angle2quat(IMU_Yaw, IMU_Roll, IMU_Pitch );
+IMU_Q = angle2quat(  -IMU_Pitch, -IMU_Roll, -IMU_Yaw, 'XYZ');
+
 
 % Get the linear interpolation of the orientation from the IMU
 Q = interp1(IMU_Timestamp, IMU_Q, T);
@@ -176,10 +169,8 @@ Q = interp1(IMU_Timestamp, IMU_Q, T);
 % Rotate all points by it's orientation
 p1 = quatrotate(Q, [X, Y, zeros(size(X))]);
 
-
 % Translate all points by it's translation
-%p2 = p1 + P;
-p2 = p1;
+p2 = p1 + P;
 
 
 %
@@ -220,45 +211,42 @@ p2 = p1;
 %            rx, ry, rz, nScale*1.2);
 
 
-% Plot a single scan  
-figure(14); 
-figure(15);
-for j = 1:1000:(size(p2,1)-1000)
-    set(0, 'CurrentFigure', 14);
-    clf ;
-    nScale = 0.8;
-    i = j + (1:1000);
-    plot3(p2(i,1), p2(i,2), p2(i,3), '.b', 'MarkerSize', 2);
-    grid;
-    axis equal;
-    hold on;   
-    axis([-1 1 -1 1 -1 1] * 10);
-    PlotTraj3D(0, 0, 0, rx(j), ry(j), rz(j), nScale); 
-    %PlotTraj3D(P(i,1), P(i,2), P(i,3), rx(i), ry(i), rz(i), nScale); 
-    %plot3(P(1:i,1), P(1:i,2), P(1:i,3), '-k', 'MarkerSize', 2) ;
-
-    view([180 0])
-    drawnow;
+% % Plot a single scan  
+% figure(14); 
+% clf ;
+% for j = 1:1000:(size(p2,1)-1000)
+%     
+%     % Select figure without taking focus
+%     set(0, 'CurrentFigure', 14);    
+%     i = j + (1:1000);
+%     plot3(p1(i,1), p1(i,2), p1(i,3), '.b', 'MarkerSize', 2);
+%     grid;
+%     axis equal;
+%     hold on;       
+%     axis([-1 1 -1 1 -1 .1] * 20);
+%     
+%     nScale = 0.8;
+%     PlotTraj3D(0, 0, 0, rx(j), ry(j), rz(j), nScale); 
+%     %PlotTraj3D(P(i,1), P(i,2), P(i,3), rx(i), ry(i), rz(i), nScale); 
+%     %plot3(P(1:i,1), P(1:i,2), P(1:i,3), '-k', 'MarkerSize', 2) ;
+% 
+%     view([-90 90]) % From Top
+%     %view([-90 0])  % From Left Side
+%     %view([0 0])    % From Back
+%     
+%     drawnow;
+%     pause(0.05);
+%     clf
+% end
     
 
-    set(0, 'CurrentFigure', 15);
-    clf
-    plot(X(i), -Y(i), '.b', 'MarkerSize', 2);
-    hold on;
-    plot(X2(i), -Y2(i), '.r', 'MarkerSize', 2);
-    plot(X3(i), -Y3(i), '.g', 'MarkerSize', 2);
-    plot(0,0, '.k');
-    axis([-1 1 -1 1 -6 1] * 5);
-    
-    pause(0.01);
-end
 
-% figure(15)
-% clf 
-% grid
-% axis equal
-% plot3(p2(:,1), p2(:,2), p2(:,3), '.b', 'MarkerSize', 2)
-% hold on;      
-%        
+figure(15)
+clf 
+grid
+axis equal
+plot3(p2(:,1), p2(:,2), p2(:,3), '.b', 'MarkerSize', 2)
+hold on;      
+       
        
        

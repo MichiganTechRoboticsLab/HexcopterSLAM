@@ -1,4 +1,4 @@
-function  PlotTraj3D( x, y, z, rx, ry, rz, l)
+function h = PlotTraj3D( x, y, z, rx, ry, rz, l)
 %PLOTTRAJ3D  Plot a Trajectory in 3D with rotations
 %   Dereck Wonnacott (c) 2014
 
@@ -64,14 +64,14 @@ function  PlotTraj3D( x, y, z, rx, ry, rz, l)
     
     
     % Plot em
-    plot3(Qx(:,1), Qx(:,2), Qx(:,3), 'r')
-    plot3(Qy(:,1), Qy(:,2), Qy(:,3), 'g')
-    plot3(Qz(:,1), Qz(:,2), Qz(:,3), 'b')
-    plot3(x, y, z, 'k')
+    h(1) = plot3(Qx(:,1), Qx(:,2), Qx(:,3), 'r');
+    h(2) = plot3(Qy(:,1), Qy(:,2), Qy(:,3), 'g');
+    h(3) = plot3(Qz(:,1), Qz(:,2), Qz(:,3), 'b');
+    h(4) = plot3(x, y, z, 'k');
     
     % Plot Initial Axis Markers
-    line([x(1) Qx(1,1)], [y(1) Qx(1,2)], [z(1) Qx(1,3)], 'Color', 'r', 'LineWidth', 2)
-    line([x(1) Qy(1,1)], [y(1) Qy(1,2)], [z(1) Qy(1,3)], 'Color', 'g', 'LineWidth', 2)
-    line([x(1) Qz(1,1)], [y(1) Qz(1,2)], [z(1) Qz(1,3)], 'Color', 'b', 'LineWidth', 2)
+    h(5) = line([x(1) Qx(1,1)], [y(1) Qx(1,2)], [z(1) Qx(1,3)], 'Color', 'r', 'LineWidth', 2);
+    h(6) = line([x(1) Qy(1,1)], [y(1) Qy(1,2)], [z(1) Qy(1,3)], 'Color', 'g', 'LineWidth', 2);
+    h(7) = line([x(1) Qz(1,1)], [y(1) Qz(1,2)], [z(1) Qz(1,3)], 'Color', 'b', 'LineWidth', 2);
 end
 
