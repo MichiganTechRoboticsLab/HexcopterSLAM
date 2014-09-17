@@ -38,6 +38,8 @@ GPS_MetricPose(:,3) = -1 * GPS_MetricPose(:,3);
 % Interpolate the GPS pose for each IMU orientation (metric)
 IMU_MetricPose = interp1(GPS_Timestamp, GPS_MetricPose, IMU_Timestamp);
 
+% Generate Quaternions for linear interpolation of rotations
+IMU_Q = angle2quat(  -IMU_Pitch, -IMU_Roll, -IMU_Yaw, 'XYZ');
 
 % Cleanup workspace
 clear i
