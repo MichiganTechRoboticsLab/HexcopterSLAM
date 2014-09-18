@@ -1,3 +1,15 @@
+% ReadHokuyoLog.m
+%  Reads the Hokuyo sensor log and sets some variables pertaining to the 
+%  sensor such as start end angle. Because the log file can take a long time 
+%  to read, it only reads the file once per session. If you change data sets 
+%  or want to force a reload you must delete the Lidar_Log variable from the 
+%  workspace. This feature has saved hours. :)  The result of the file will 
+%  be a vector of points, not a matrix. This is because the file automatically 
+%  drops all out of range points before passing the data back to the workspace. 
+%  This cut 5 million points from the dataset, saving a lot of time. There are 
+%  quite a few examples on how to index through the dataset one scan at a time 
+%  if needed.  For each point there is a column vector with a timestamp, 
+%  angle, range, X, Y, and Scan index, 
 
 
 % Check that the File Exists

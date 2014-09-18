@@ -1,3 +1,6 @@
+% PlotRawLidar.m
+%  Plots the raw Lidar data all on one plot, and one scan at a time.
+
 
 % Load Data
 Header

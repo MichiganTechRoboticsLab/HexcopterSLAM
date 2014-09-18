@@ -1,16 +1,24 @@
+% ReadVectorNavLog.m
+%  Reads the vectornav log file into matlab and makes variables for each data type.  
+%  Generates a single timestamp value from the two log file columns, converts the 
+%  LLA to metric positions, and converts the IMU’s RPY  valued into quaternions. 
+%  It also filters out all zero LLA values from the gps data. So the IMU and GPS
+%  data arrays may not be the same length!
 
+
+% Check that a log file was specified
 if ~exist(VectorNav_Logfile, 'file')
     error('VectorNav Logfile not found')
 end
 
+% Read the log file
 VectorNav_log = load(VectorNav_Logfile);
-
 
 %
 % Reformat Data
 %
 
-% Remove Nulls from GPS
+% Remove entries from GPS data where no gps data was available
 i = VectorNav_log(:,6) ~= 0;
 
 % Combine Timestamp into single element

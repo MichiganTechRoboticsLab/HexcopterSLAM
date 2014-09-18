@@ -1,11 +1,6 @@
-% PlotRawFusion.m
-%  Very basic fusion of the raw Vectornav and Hokuyo sensor data without heuristics.
-%  Plots the interpolated lidar pos over the GPS track
-%  Plots the interpolated lidar pos and orientation over the GPS track
-%  Plots the Full point cloud.
-%  Plots the orientation, pose, and each scan one at a time. (animation)
-
+%
 % Load Data
+%
 Header
 ReadVectorNavLog
 ReadHokuyoLog

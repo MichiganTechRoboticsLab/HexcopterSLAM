@@ -1,6 +1,15 @@
-%
+% PlotRawVectorNav.m
+%  Sample code for displaying the raw vector nav data. Currently 8 different plots:
+%  GPS path over a google map
+%  3D plot of gps path
+%  Raw sensor data for the LLA and IMU signals
+%  Missing data plot (based on timestamps)
+%  A plot of the orientations from the IMU in 3D without translation.
+%  A Plot of the flat (metric) gps track interpolated for each IMU message (accounts for short missing GPS locks)
+%  A plot of the orientations from the IMU over the GPS track
+
+
 % Load Data
-%
 Header
 ReadVectorNavLog
 
