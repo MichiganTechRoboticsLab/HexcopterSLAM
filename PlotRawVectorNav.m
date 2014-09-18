@@ -25,10 +25,17 @@ end
 % Plot GP track over a Google Maps image
 figure(1)
 clf
+subplot(2,1,1);
 plot(GPS_Longitude, GPS_Lattitude, '.r', 'MarkerSize', 3) 
 plot_google_map('MapType', 'hybrid')  % Dont forget to add to path
 title('GPS Track');
 
+subplot(2,1,2);
+plot(GPS_MetricPose(:,2),GPS_MetricPose(:,1),'.');
+title('Flat Earth Coordinates');
+axis equal;
+
+%return;
 
 % Plot the GPS track in 3D
 figure(2)
@@ -56,13 +63,13 @@ title('GPS Altitude');
 figure(4)
 clf
 subplot(3,1,1);
-plot(IMU_Timestamp, IMU_Pitch, '.r')
+plot(IMU_Timestamp, rad2deg(IMU_Pitch), '.r')
 title('IMU Pitch');
 subplot(3,1,2);
-plot(IMU_Timestamp, IMU_Roll, '.g')
-title('GPS Roll');
+plot(IMU_Timestamp, rad2deg(IMU_Roll), '.g')
+title('IMU Roll');
 subplot(3,1,3);
-plot(IMU_Timestamp, IMU_Yaw, '.b')
+plot(IMU_Timestamp, rad2deg(IMU_Yaw), '.b')
 title('IMU Yaw');
 
 
@@ -81,7 +88,7 @@ title('Missing Data Identification (IMU)')
 % Plot all orientations on same spot
 figure(6)
 clf
-PlotPose3D(0,0,0, 0,0,0, 1);
+%PlotPose3D(0,0,0, 0,0,0, 1);
 hold on
 view(63, 24)
 axis([-1 1 -1 1 -1 1])
@@ -120,6 +127,3 @@ PlotTraj3D(IMU_MetricPose(:,1), IMU_MetricPose(:,2), IMU_MetricPose(:,3), ...
        
        
 clear zv nScale
-
-
-
