@@ -1,3 +1,6 @@
+
+error('IGNORE THIS FILE, HALF-BAKED CODE THAT DOESNT WORK YET')
+
 %
 % Load Data
 %

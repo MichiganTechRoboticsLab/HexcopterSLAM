@@ -29,10 +29,19 @@
 function pclviewer(points, args)
     
     % change the next line to suit your operating system
+    if ispc
+        % Windows (Tested: Win7 x64)
+        viewer = '"C:\Program Files\PCL 1.6.0\bin\pcd_viewer_release.exe"';
+    end
+    if isunix
+        % Linux (Tested: Ubuntu 14.04 & PLC 1.6)
+        viewer = '/usr/bin/pcl_viewer';
+    end
+    if ismac
+        % MacOS
+        viewer = '/usr/local/bin/pcl_viewer.app/Contents/MacOS/pcl_viewer';
+    end
     
-    %viewer = '/usr/bin/pcl_viewer';
-    viewer = '"C:\Program Files\PCL 1.6.0\bin\pcd_viewer_release.exe"';
-     
     pointfile = [tempname '.pcd'];
     
     if nargin < 2
