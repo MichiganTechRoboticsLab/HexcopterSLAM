@@ -81,19 +81,36 @@ for i = 1:length(nScanIndex)
     cs(I,:) = [];
 
     
-    % Debug plot    
+    % Debug plots    
     set(0, 'CurrentFigure', 1);
     clf;
+    
+    % Curb ROI Display
     subplot(2,1,1);
     plot( cs(:,1),  cs(:,3), '.b');
     axis equal;
     title(num2str(nIndex));
-        
+    
+    % First Diff display
     subplot(2,1,2);
     n = 1;
-    plot( cs((n+1):end,1),  diff(cs(:,3),n), '-r');
+    x = cs((n+1):end,1);
+    y = diff(cs(:,3),n);
+    plot( x, y, '-r');
+    
+    % Curb Location Display
+    [val, ind] = max(y);
+    Curb_X = x(ind);
+    subplot(2,1,1);
+    hold on;
+    plot([Curb_X Curb_X], [min(cs(:,3)) max(cs(:,3))], '-g');
+    
+    subplot(2,1,2);
+    hold on;
+    plot([Curb_X Curb_X], [min(y) max(y)], '-g');
+    
     drawnow();
-    pause(0.01);
+    pause(0.05);
 end
 pointcloud = pc;
 
