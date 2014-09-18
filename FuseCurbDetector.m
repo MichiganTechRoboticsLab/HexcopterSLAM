@@ -64,10 +64,10 @@ end
 pc = Fusion_PointsRotated + Fusion_Position;
 
 % Debug plot (ROI)
-figure(1);
+%figure(1);
 
 % Initialize the Curb Location
-Curb_X = 0;
+Curb_X = -0.6;
 Curb_Point = [];
 
 % Loop through all scans
@@ -79,8 +79,6 @@ for i = 1:length(nScanIndex)
     I = nIndex == Lidar_ScanIndex;
     cs = pc(I,:);
     
-    
-    
     % Remove points from outside the ROI
     nROI_width = 0.75;
     I = (cs(:,1) < (Curb_X - nROI_width))  | (cs(:,1) > (Curb_X + nROI_width)) | ...
@@ -89,12 +87,10 @@ for i = 1:length(nScanIndex)
     
     % Find Curb with First Difference 
     x = cs(2:end,1);
-    y = diff(cs(:,3),n);
+    y = diff(cs(:,3));
     [val, ind] = max(y);
     Curb_X = x(ind);
     Curb_Point(i,:) = cs(ind,:);
-    
-    
     
     
 %     % Debug plots    
@@ -123,8 +119,59 @@ for i = 1:length(nScanIndex)
 %     % Update Displays
 %     drawnow();
 %     pause(0.05);
+
 end
 pointcloud = pc;
+
+
+% Translate each scan so that the curb point lines up
+start_pt = Curb_Point(1,:);
+end_pt   = Curb_Point(end,:);
+
+% Use the start point as the origin
+cp = bsxfun(@minus, Curb_Point, start_pt);
+ep = end_pt - start_pt;
+
+% Change B into a normalized vector
+EP = ep/norm(ep);
+
+% Dot Products
+dp = [];
+for i = 1:size(cp, 1)
+    dp(i,:) = dot(cp(i,:),EP);
+end
+
+% Find the new snap-fit point
+cp = dp * EP;
+
+% Translate back to original frame
+cp = bsxfun(@plus, cp, start_pt);
+
+
+
+% 
+% % Debug Plot
+% figure(2)
+% clf 
+% % Showthe detected curb locations
+% plot3(Curb_Point(:,1), Curb_Point(:,2), Curb_Point(:,3), '-b', 'MarkerSize', 5)
+% axis equal
+% hold on
+% plot3(Curb_Point(:,1), Curb_Point(:,2), Curb_Point(:,3), '.b', 'MarkerSize', 5)
+% grid
+% 
+% % Show the linear line to fit the data to
+% Curb_line = [start_pt; end_pt];
+% plot3(Curb_line(:,1), Curb_line(:,2), Curb_line(:,3), '-g', 'MarkerSize', 20);
+% plot3(start_pt(1), start_pt(2), start_pt(3), 'Og', 'MarkerSize', 15);
+% plot3(end_pt(1),   end_pt(2),   end_pt(3),   'Or', 'MarkerSize', 15');
+% 
+% % Show the interpolated postitions
+% plot3(cp(:,1), cp(:,2), cp(:,3), '.r', 'MarkerSize', 10);
+
+
+
+
 
 
 % Update the points in the point cloud to align the curb.
@@ -136,7 +183,7 @@ for i = 1:length(nScanIndex)
     I = nIndex == Lidar_ScanIndex;
     
     % Update the postition
-    Fusion_Position(I, 1) = Fusion_Position(I, 1) - Curb_Point(i,1);
+    Fusion_Position(I, :) = bsxfun(@minus, Fusion_Position(I, :), (Curb_Point(i,:) - cp(i,:)));
 end
 
 
@@ -147,6 +194,8 @@ Fusion_pointcloud = Fusion_PointsRotated + Fusion_Position;
 [rz, ry, rx] = quat2angle(Fusion_Q);
 Fusion_RPY = [ry, rx, rz];
 clear rx ry rz;
+
+
 
 
 return
@@ -165,7 +214,7 @@ hold on;
 plot3(Curb_Point(:,1), Curb_Point(:,2), Curb_Point(:,3), '-g');
 
 
-%% Plot a single scan with translation
+% Plot a single scan with translation
 figure(3); 
 nScanIndex = unique(Lidar_ScanIndex);
 for i = 1:length(nScanIndex)
