@@ -29,21 +29,24 @@ function h = PlotTraj3D( x, y, z, rx, ry, rz, l)
 
     % Generate Rotation Matrix for axis vectors (RPY)
     % http://www.mathworks.com/matlabcentral/fileexchange/35970-calcuate-euler-angles-from-rotation-matrix
-    rx = - reshape(rx,1,1,nLen);
-    ry = - reshape(ry,1,1,nLen);
-    rz = - reshape(rz,1,1,nLen);
-    R = [ cos(ry).*cos(rz)                            , -cos(ry).*sin(rz)                            ,  sin(ry);
-          cos(rx).*sin(rz) + cos(rz).*sin(rx).*sin(ry),  cos(rx).*cos(rz) - sin(rx).*sin(ry).*sin(rz), -cos(ry).*sin(rx);
+    rx = - rx;
+    ry = - ry;
+    rz = - rz;
+    R = [ 
+          cos(ry).*cos(rz)                            , -cos(ry).*sin(rz)                            ,  sin(ry),  ...
+          cos(rx).*sin(rz) + cos(rz).*sin(rx).*sin(ry),  cos(rx).*cos(rz) - sin(rx).*sin(ry).*sin(rz), -cos(ry).*sin(rx),  ...
           sin(rx).*sin(rz) - cos(rx).*cos(rz).*sin(ry),  cos(rz).*sin(rx) + cos(rx).*sin(ry).*sin(rz),  cos(rx).*cos(ry) ];
+    M = reshape(R', 3, 3, []);
+
     
     % Rotate Axis Points
     Qx = zeros(nLen, 3);
     Qy = Qx;
     Qz = Qx;
     for i = 1:nLen
-        Qx(i,:) = [l 0 0] * R(:,:,i);
-        Qy(i,:) = [0 l 0] * R(:,:,i);
-        Qz(i,:) = [0 0 l] * R(:,:,i);
+        Qx(i,:) = [l 0 0] * M(:,:,i);
+        Qy(i,:) = [0 l 0] * M(:,:,i);
+        Qz(i,:) = [0 0 l] * M(:,:,i);
     end
     
     % Translate to position
@@ -71,3 +74,4 @@ function h = PlotTraj3D( x, y, z, rx, ry, rz, l)
     h(6) = line([x(1) Qy(1,1)], [y(1) Qy(1,2)], [z(1) Qy(1,3)], 'Color', 'g', 'LineWidth', 2);
     h(7) = line([x(1) Qz(1,1)], [y(1) Qz(1,2)], [z(1) Qz(1,3)], 'Color', 'b', 'LineWidth', 2);
 end
+

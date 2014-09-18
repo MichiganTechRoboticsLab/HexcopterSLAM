@@ -1,7 +1,7 @@
 % ReadVectorNavLog.m
 %  Reads the vectornav log file into matlab and makes variables for each data type.  
 %  Generates a single timestamp value from the two log file columns, converts the 
-%  LLA to metric positions, and converts the IMU's RPY  valued into quaternions. 
+%  LLA to metric positions, and converts the IMU’s RPY  valued into quaternions. 
 %  It also filters out all zero LLA values from the gps data. So the IMU and GPS
 %  data arrays may not be the same length!
 
@@ -37,17 +37,14 @@ IMU_Roll  = deg2rad(VectorNav_log(:,5));
 
 % Convert from LLA to Metric Coodinates
 GPS_MetricPose = lla2flat([GPS_Lattitude GPS_Longitude GPS_Altitude], ... 
-                          [GPS_Lattitude(1) GPS_Longitude(1)],  0, -GPS_Altitude(1));
+                          [GPS_Lattitude(1) GPS_Longitude(1)],  -90, -GPS_Altitude(1));
 
 % I dont know why the resulting X & Z is negative.... 
-% GPS_MetricPose(:,1) = -1 * GPS_MetricPose(:,1);
+GPS_MetricPose(:,1) = -1 * GPS_MetricPose(:,1);
 GPS_MetricPose(:,3) = -1 * GPS_MetricPose(:,3);
 
 % Interpolate the GPS pose for each IMU orientation (metric)
-IMU_MetricPose = interp1(GPS_Timestamp, [GPS_MetricPose(:,2) GPS_MetricPose(:,1) GPS_MetricPose(:,3)], IMU_Timestamp);
-
-% normalize the Yaw to assume the Hex is moving forward
-IMU_Yaw = IMU_Yaw - IMU_Yaw(1);
+IMU_MetricPose = interp1(GPS_Timestamp, GPS_MetricPose, IMU_Timestamp);
 
 % Generate Quaternions for linear interpolation of rotations
 IMU_Q = angle2quat(  -IMU_Pitch, -IMU_Roll, -IMU_Yaw, 'XYZ');

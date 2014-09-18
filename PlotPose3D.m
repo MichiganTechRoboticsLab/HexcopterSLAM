@@ -26,7 +26,8 @@ function PlotPose3D( x, y, z, rx, ry, rz, l)
     rx = - rx;
     ry = - ry;
     rz = - rz;
-    R = [[ cos(ry)*cos(rz)                          , -cos(ry)*sin(rz),                            sin(ry)] 
+    R = [ 
+         [ cos(ry)*cos(rz)                          , -cos(ry)*sin(rz),                            sin(ry)] 
          [ cos(rx)*sin(rz) + cos(rz)*sin(rx)*sin(ry),  cos(rx)*cos(rz) - sin(rx)*sin(ry)*sin(rz), -cos(ry)*sin(rx)] 
          [ sin(rx)*sin(rz) - cos(rx)*cos(rz)*sin(ry),  cos(rz)*sin(rx) + cos(rx)*sin(ry)*sin(rz),  cos(rx)*cos(ry)]];
 
@@ -42,4 +43,6 @@ function PlotPose3D( x, y, z, rx, ry, rz, l)
     plot3([x ax(1)], [y ax(2)], [z ax(3)], 'r');
     plot3([x ay(1)], [y ay(2)], [z ay(3)], 'g');
     plot3([x az(1)], [y az(2)], [z az(3)], 'b');
+
 end
+
