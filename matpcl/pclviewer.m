@@ -29,8 +29,9 @@
 function pclviewer(points, args)
     
     % change the next line to suit your operating system
-    viewer = '/usr/bin/pcl_viewer';
-
+    
+    %viewer = '/usr/bin/pcl_viewer';
+    viewer = '"C:\Program Files\PCL 1.6.0\bin\pcd_viewer_release.exe"';
      
     pointfile = [tempname '.pcd'];
     
@@ -40,10 +41,9 @@ function pclviewer(points, args)
     
     savepcd(pointfile, points);
     
-    system(sprintf('head -20 %s', pointfile));
+    %system(sprintf('head -20 %s', pointfile));
     
-    system(sprintf('%s %s %s &', ...
-        viewer, pointfile, args));
+    system(sprintf('%s %s %s &', viewer, pointfile, args));
    
     pause(1)
     delete(pointfile);

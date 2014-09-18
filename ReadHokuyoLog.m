@@ -53,7 +53,7 @@ else
             [items, ~] = sscanf(tLine, '%d,%f');
 
             % Store this measurement (Convert from mm to m)
-            Lidar_Log(nScan,Lidar_Col_Ranges + nPoint) = items(1) * 1e-3;
+            Lidar_Log(nScan, Lidar_Col_Ranges + nPoint) = items(1) * 1e-3;
             nPoint = nPoint + 1;
         end
 
@@ -79,6 +79,9 @@ else
     if size(Lidar_Log, 2) > Lidar_Col_Ranges + Lidar_nPoints
         Lidar_Log(:, Lidar_Col_Ranges + Lidar_nPoints:end) = [];
     end
+    
+    % Record number of scans read
+    Lidar_ScanCount = nScan;
 end
 
 % Grab all range measurements from Lidar data
@@ -103,7 +106,7 @@ Lidar_Angles = repmat(a, size(r,1), 1);
 
 
 % Remove invalid range data (Too close or too far)
-I = or(Lidar_Ranges >= 20, Lidar_Ranges <= 0.35);
+I = or(Lidar_Ranges >= 25, Lidar_Ranges <= 0.35);
 Lidar_ScanIndex(I) = [];
 Lidar_Timestamp(I) = [];
 Lidar_Angles(I) = [];
@@ -118,4 +121,8 @@ Lidar_Ranges(I) = [];
 % Cleanup workspace
 clearvars fid nLine nScan nPoint tLine items nPoints I da
 clearvars r R a A t1 t2 T t I
+
+
+
+
 
