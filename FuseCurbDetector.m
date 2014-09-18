@@ -84,9 +84,14 @@ for i = 1:length(nScanIndex)
     % Debug plot    
     set(0, 'CurrentFigure', 1);
     clf;
+    subplot(2,1,1);
     plot( cs(:,1),  cs(:,3), '.b');
     axis equal;
     title(num2str(nIndex));
+        
+    subplot(2,1,2);
+    n = 1;
+    plot( cs((n+1):end,1),  diff(cs(:,3),n), '-r');
     drawnow();
     pause(0.01);
 end
