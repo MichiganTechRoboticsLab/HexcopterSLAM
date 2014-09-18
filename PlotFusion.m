@@ -62,8 +62,8 @@ PlotTraj3D(Fusion_Position(:,1), Fusion_Position(:,2), Fusion_Position(:,3), ...
 figure(3)
 clf 
 grid
-axis equal
 plot3(Fusion_pointcloud(:,1), Fusion_pointcloud(:,2), Fusion_pointcloud(:,3), '.b', 'MarkerSize', 2)
+axis equal
 hold on; 
 
 
