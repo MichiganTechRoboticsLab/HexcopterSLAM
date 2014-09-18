@@ -97,7 +97,7 @@ for i = 1:length(nScanIndex)
     title('Lidar Scan Animation (Rotation Only)')
     
     % Show the oreintation at this scan
-    nScale = 5;
+    nScale = 1;
     rx1 = Fusion_RPY(I,2);
     ry1 = Fusion_RPY(I,1);
     rz1 = Fusion_RPY(I,3);
@@ -136,7 +136,7 @@ for i = 1:length(nScanIndex)
     title('Lidar Scan Animation (Rotation + Translation)')
     
     % Show the oreintation at this scan
-    nScale = 0.8;
+    nScale = 1;
     p1  = Fusion_Position(I,:);
     rx1 = Fusion_RPY(I,2);
     ry1 = Fusion_RPY(I,1);

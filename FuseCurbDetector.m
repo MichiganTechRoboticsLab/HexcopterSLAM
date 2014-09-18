@@ -127,6 +127,19 @@ end
 pointcloud = pc;
 
 
+% Update the points in the point cloud to align the curb.
+nScanIndex = unique(Lidar_ScanIndex);
+for i = 1:length(nScanIndex)
+    
+    % Retrieve each scan's points
+    nIndex = nScanIndex(i);
+    I = nIndex == Lidar_ScanIndex;
+    
+    % Update the postition
+    Fusion_Position(I, 1) = Fusion_Position(I, 1) - Curb_Point(i,1);
+end
+
+
 % Translate all points by their translation
 Fusion_pointcloud = Fusion_PointsRotated + Fusion_Position;
 
@@ -135,6 +148,8 @@ Fusion_pointcloud = Fusion_PointsRotated + Fusion_Position;
 Fusion_RPY = [ry, rx, rz];
 clear rx ry rz;
 
+
+return
 
 %
 % Debug Plots
@@ -172,7 +187,7 @@ for i = 1:length(nScanIndex)
           Curb_Point(i,3)-nWindowSize Curb_Point(i,3)+nWindowSize]);
     title('Lidar Scan Animation (Rotation + Translation)')
     
-    % Show the oreintation at this scan
+    % Show the orientation at this scan
     nScale = 1;
     p1  = Fusion_Position(I,:);
     rx1 = Fusion_RPY(I,2);
