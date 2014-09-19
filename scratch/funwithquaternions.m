@@ -86,6 +86,7 @@ roll  = 0;
 
 % Point to rotate
 A = [ 1 0 0]
+%A = rand(50,3) * 2*pi;
 
 % Rotate
 Q = angle2quat(yaw, pitch, roll);

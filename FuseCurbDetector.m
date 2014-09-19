@@ -67,12 +67,20 @@ pc = Fusion_PointsRotated + Fusion_Position;
 figure(1);
 
 % Initialize the Curb Location 
-Curb_X = 172; % Signs Dataset
+%Curb_X = 362; % Signs Dataset vn
+Curb_X = 240; % Signs Dataset vn_1
+
+
 Curb_Point = [];
 
 % Loop through all scans
 nScanIndex = unique(Lidar_ScanIndex);
 for i = 1:length(nScanIndex)
+    
+    % Progress
+    if ~mod(i, 1000)
+        disp(i)
+    end
     
     % Retrieve each scan's points
     nIndex = nScanIndex(i);
@@ -80,55 +88,87 @@ for i = 1:length(nScanIndex)
     cs = pc(I,:);
     
     % Remove points from outside the ROI
-    nROI_width = 40;
+    nROI_width = 20;
     
     start_ROI = Curb_X - nROI_width;
     if start_ROI < 1 
         start_ROI = 1;
     end
-    end_ROI = start_ROI*2;
+    end_ROI = start_ROI + 2*nROI_width;
     if end_ROI > size( cs, 1)
         end_ROI = size( cs, 1);
     end
-   
-    cs = cs(start_ROI:end_ROI, :);
-
+    
+    % Find points to search for the curbin
+    ROIx = start_ROI:end_ROI;
+    ROIy = cs(start_ROI:end_ROI, :);
+    
+    % Low-Pass Filter
+    a = 0.98;
+    f = filter(a, [1 a-1], ROIy(:,3));
     
     % Find Curb with First Difference 
-    x = start_ROI:end_ROI;
-    y = diff(cs(:,3));
-    [val, ind] = max(y);
-    Curb_Point(i,:) = cs(ind,:);
+    d = diff(f);
     
+    % Low-Pass Filter
+    a = 0.3;
+    F = filter(a, [1 a-1], d);
     
-        
-    % Debug plots    
-    set(0, 'CurrentFigure', 1);
-    clf;
+    % Find curb
+    [val, ind] = max(F);
+    xMax = ROIx(ind);
+    Curb_Point(i,:) = cs(xMax,:);
     
-    % Curb ROI Display
-    subplot(2,1,1);
-    plot(x, cs(:,3), '.b');
-    %axis equal;
-    title(num2str(nIndex));
+    % Update the ROI center
+    Curb_X = xMax;
+       
     
-    % First Diff display
-    subplot(2,1,2);
-    plot(x(1:end-1), y, '-r');
-    
-    % Curb Location Displays 
-    subplot(2,1,1);
-    hold on;
-    plot([ind ind], [min(cs(:,3)) max(cs(:,3))], '-g');
-    
-    subplot(2,1,2);
-    hold on;
-    plot([ind ind], [min(y) max(y)], '-g');
-    
-    % Update Displays
-    drawnow();
-    pause(0.05);
-
+% 
+%     % Debug plots    
+%     set(0, 'CurrentFigure', 1);
+%     clf;
+%     
+%     % Curb ROI Display
+%     subplot(4,1,1);
+%     plot(ROIx, ROIy(:,3), '.b');
+%     %axis equal;
+%     title(num2str(nIndex));
+%     
+%     % Low pass filter
+%     subplot(4,1,2);
+%     plot(ROIx, f, '-r');
+%     
+%     % First Diff display
+%     subplot(4,1,3);
+%     plot(ROIx(2:end), d, '-r');
+%     
+%     % Low pass filter
+%     subplot(4,1,4);
+%     plot(ROIx(2:end), F, '-r');
+%     
+%     
+%     
+%     % Curb Location Displays 
+%     subplot(4,1,1);
+%     hold on;
+%     plot([xMax xMax], [min(ROIy(:,3)) max(ROIy(:,3))], '-g');
+%     
+%     subplot(4,1,2);
+%     hold on;
+%     plot([xMax xMax], [min(f) max(f)], '-g');
+%     
+%     subplot(4,1,3);
+%     hold on;
+%     plot([xMax xMax], [min(d) max(d)], '-g');
+%     
+%     subplot(4,1,4);
+%     hold on;
+%     plot([xMax xMax], [min(F) max(F)], '-g');
+%     
+%     % Update Displays
+%     drawnow();
+%     pause(0.05);
+%     
 end
 pointcloud = pc;
 
@@ -162,7 +202,7 @@ cp = bsxfun(@plus, cp, start_pt);
 % % Debug Plot
 % figure(2)
 % clf 
-% % Showthe detected curb locations
+% % Show the detected curb locations
 % plot3(Curb_Point(:,1), Curb_Point(:,2), Curb_Point(:,3), '-b', 'MarkerSize', 5)
 % axis equal
 % hold on
