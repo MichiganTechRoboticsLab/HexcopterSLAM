@@ -35,7 +35,7 @@ i = VectorNav_log(:,3) ~= 0;
 
 % Extract IMU Orientation
 IMU_Timestamp = VectorNav_log(i,1) + VectorNav_log(i,2) * 10E-7;
-IMU_Yaw   = deg2rad(VectorNav_log(i,3));
+IMU_Yaw   = deg2rad(VectorNav_log(i,3)) + deg2rad(20);
 IMU_Pitch = deg2rad(VectorNav_log(i,4));
 IMU_Roll  = deg2rad(VectorNav_log(i,5));
 
