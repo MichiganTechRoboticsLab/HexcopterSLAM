@@ -64,10 +64,10 @@ end
 pc = Fusion_PointsRotated + Fusion_Position;
 
 % Debug plot (ROI)
-%figure(1);
+figure(1);
 
-% Initialize the Curb Location
-Curb_X = -0.6;
+% Initialize the Curb Location 
+Curb_X = 172; % Signs Dataset
 Curb_Point = [];
 
 % Loop through all scans
@@ -80,45 +80,54 @@ for i = 1:length(nScanIndex)
     cs = pc(I,:);
     
     % Remove points from outside the ROI
-    nROI_width = 0.75;
-    I = (cs(:,1) < (Curb_X - nROI_width))  | (cs(:,1) > (Curb_X + nROI_width)) | ...
-        (cs(:,3) > 1);
-    cs(I,:) = [];
+    nROI_width = 40;
+    
+    start_ROI = Curb_X - nROI_width;
+    if start_ROI < 1 
+        start_ROI = 1;
+    end
+    end_ROI = start_ROI*2;
+    if end_ROI > size( cs, 1)
+        end_ROI = size( cs, 1);
+    end
+   
+    cs = cs(start_ROI:end_ROI, :);
+
     
     % Find Curb with First Difference 
-    x = cs(2:end,1);
+    x = start_ROI:end_ROI;
     y = diff(cs(:,3));
     [val, ind] = max(y);
-    Curb_X = x(ind);
     Curb_Point(i,:) = cs(ind,:);
     
     
-%     % Debug plots    
-%     set(0, 'CurrentFigure', 1);
-%     clf;
-%     
-%     % Curb ROI Display
-%     subplot(2,1,1);
-%     plot( cs(:,1),  cs(:,3), '.b');
-%     axis equal;
-%     title(num2str(nIndex));
-%     
-%     % First Diff display
-%     subplot(2,1,2);
-%     plot( x, y, '-r');
-%     
-%     % Curb Location Display  
-%     subplot(2,1,1);
-%     hold on;
-%     plot([Curb_X Curb_X], [min(cs(:,3)) max(cs(:,3))], '-g');
-%     
-%     subplot(2,1,2);
-%     hold on;
-%     plot([Curb_X Curb_X], [min(y) max(y)], '-g');
-%     
-%     % Update Displays
-%     drawnow();
-%     pause(0.05);
+        
+    % Debug plots    
+    set(0, 'CurrentFigure', 1);
+    clf;
+    
+    % Curb ROI Display
+    subplot(2,1,1);
+    plot(x, cs(:,3), '.b');
+    %axis equal;
+    title(num2str(nIndex));
+    
+    % First Diff display
+    subplot(2,1,2);
+    plot(x(1:end-1), y, '-r');
+    
+    % Curb Location Displays 
+    subplot(2,1,1);
+    hold on;
+    plot([ind ind], [min(cs(:,3)) max(cs(:,3))], '-g');
+    
+    subplot(2,1,2);
+    hold on;
+    plot([ind ind], [min(y) max(y)], '-g');
+    
+    % Update Displays
+    drawnow();
+    pause(0.05);
 
 end
 pointcloud = pc;
