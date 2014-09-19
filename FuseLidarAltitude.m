@@ -29,7 +29,6 @@ Fusion_PointsRotated = quatrotate(Fusion_Q, [Lidar_X, Lidar_Y, zeros(size(Lidar_
 
 
 
-
 % Find the Altitude from the Lidar data
 %   This code could be made more clear and faster but I'll have to do it
 %   later when I have more time, its good 'nuff for now.
@@ -55,11 +54,6 @@ end
 
 
 
-
 % Translate all points by their translation
 Fusion_pointcloud = Fusion_PointsRotated + Fusion_Position;
 
-% Generate RPY for each point
-[rz, ry, rx] = quat2angle(Fusion_Q);
-Fusion_RPY = [ry, rx, rz];
-clear rx ry rz;

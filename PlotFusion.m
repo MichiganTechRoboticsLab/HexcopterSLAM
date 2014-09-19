@@ -32,10 +32,12 @@ FuseCurbDetector
 % Plot the interpolated pose points and the GPS path
 figure(1)
 clf
-plot3(Fusion_Position(:,1), Fusion_Position(:,2), Fusion_Position(:,3), '.r', 'MarkerSize', 40) 
+plot3(Fusion_Position(:,1), Fusion_Position(:,2), Fusion_Position(:,3), '-r', 'MarkerSize', 4) 
 hold on;
 plot3(GPS_MetricPose(:,1), GPS_MetricPose(:,2), GPS_MetricPose(:,3), '-b') 
 title('Lidar Pose & GPS Track');
+legend('Fusion', 'GPS');
+axis equal
 grid
 
 
@@ -43,19 +45,13 @@ grid
 % Plot the interpolated orientations and the original orientation path
 figure(2)
 clf
-nScale = 0.8;
+PlotTraj3D(IMU_MetricPose, IMU_Q, 1);
 hold on
+
+PlotTraj3D(Fusion_Position, Fusion_Q, 1);
 axis equal
 grid
 title('IMU Orientation & GPS Pose')
-
-PlotTraj3D(IMU_MetricPose(:,1), IMU_MetricPose(:,2), IMU_MetricPose(:,3), ...
-           IMU_Pitch, IMU_Roll, IMU_Yaw, nScale);
-       
-
-PlotTraj3D(Fusion_Position(:,1), Fusion_Position(:,2), Fusion_Position(:,3), ...
-           Fusion_RPY(:,2), Fusion_RPY(:,1), Fusion_RPY(:,3), nScale);
-
 
 
 % Plot the full point cloud
@@ -97,19 +93,14 @@ for i = 1:length(nScanIndex)
     title('Lidar Scan Animation (Rotation Only)')
     
     % Show the oreintation at this scan
-    nScale = 1;
-    rx1 = Fusion_RPY(I,2);
-    ry1 = Fusion_RPY(I,1);
-    rz1 = Fusion_RPY(I,3);
-    PlotTraj3D(0, 0, 0, rx1(1), ry1(1), rz1(1), nScale); 
-
-    axis([-1 1 -1 1 -1 1] * 15);
-    %axis equal;
+    q = Fusion_Q(I,:);
+    PlotTraj3D([0, 0, 0], q(1,:), 1); 
+    axis equal;
     
     %view([-90 90]) % From Top
     %view([-90 0])  % From Left Side
     %view([0 0])    % From Back
-    view([-25 0])   % Signs vn_1 custom
+    %view([-25 0])   % Signs vn_1 dataset
     
     drawnow;
     pause(0.01);
@@ -137,13 +128,10 @@ for i = 1:length(nScanIndex)
     
     % Show the oreintation at this scan
     nScale = 1;
-    p1  = Fusion_Position(I,:);
-    rx1 = Fusion_RPY(I,2);
-    ry1 = Fusion_RPY(I,1);
-    rz1 = Fusion_RPY(I,3);
-    PlotTraj3D(p1(1,1), p1(1,2), p1(1,3), rx1(1), ry1(1), rz1(1), nScale); 
+    q = Fusion_Q(I,:);
+    PlotTraj3D([0, 0, 0], q(1,:), 1); 
 
-    view([-90 90]) % From Top
+    %view([-90 90]) % From Top
     %view([-90 0])  % From Left Side
     %view([0 0])    % From Back
     

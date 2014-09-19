@@ -113,7 +113,7 @@ Lidar_Timestamp = reshape(t2, [], 1);
 % Make a second column of all of the angles for each measurement
 % Rotated the lidar data to face the Y-Axis
 da = (Lidar_AngleEnd - Lidar_AngleStart) / (Lidar_nPoints - 1);
-a = (Lidar_AngleStart:da:Lidar_AngleEnd)' + pi/2 - deg2rad(8);
+a = (Lidar_AngleStart:da:Lidar_AngleEnd)' + pi/2;
 Lidar_Angles = repmat(a, size(r,1), 1);
 
 

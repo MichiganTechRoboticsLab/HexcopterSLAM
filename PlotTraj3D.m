@@ -1,77 +1,62 @@
-function h = PlotTraj3D( x, y, z, rx, ry, rz, l)
+function PlotTraj3D(P, Q, AxisVectorLength)
 %PLOTTRAJ3D  Plot a Trajectory in 3D with rotations
 %   Dereck Wonnacott (c) 2014
 
 % Inspired by http://www.mathworks.com/matlabcentral/fileexchange/24589-kinematics-toolbox/content/kinematics/screws/drawframe.m
 
     % Check for missing inputs
-    if ~exist('rx', 'var') 
-        rx = zeros(size(x));
-    end
-    if ~exist('ry', 'var') 
-        ry = zeros(size(x));
-    end
-    if ~exist('rz', 'var') 
-        rz = zeros(size(x));
+    if ~exist('Q', 'var') 
+        Q = zeros(size(x, 4));
+        Q(:,1) = 1;
     end
     if ~exist('l', 'var') 
-        l = 0.25;
+        l = 1;
     end
 
     % Check array lengths
-    nLen = length(x);
-    if nLen ~= length(y)  || nLen ~= length(z)  || ...
-       nLen ~= length(rx) || nLen ~= length(ry) || nLen ~= length(rz)
-        error('Vector Length Mismatch')
+    if size(P, 1) ~= size(Q, 1)
+        error('Input Array Length Mismatch')
     end
     
-    
+    % Axis Vectors
+    AxisVectors = [[1 0 0]
+                   [0 1 0] 
+                   [0 0 1]]; 
+    AxisVectors = AxisVectors  * AxisVectorLength;
 
-    % Generate Rotation Matrix for axis vectors (RPY)
-    % http://www.mathworks.com/matlabcentral/fileexchange/35970-calcuate-euler-angles-from-rotation-matrix
-    rx = - rx;
-    ry = - ry;
-    rz = - rz;
-    R = [ 
-          cos(ry).*cos(rz)                            , -cos(ry).*sin(rz)                            ,  sin(ry),  ...
-          cos(rx).*sin(rz) + cos(rz).*sin(rx).*sin(ry),  cos(rx).*cos(rz) - sin(rx).*sin(ry).*sin(rz), -cos(ry).*sin(rx),  ...
-          sin(rx).*sin(rz) - cos(rx).*cos(rz).*sin(ry),  cos(rz).*sin(rx) + cos(rx).*sin(ry).*sin(rz),  cos(rx).*cos(ry) ];
-    M = reshape(R', 3, 3, []);
-
+    % Rotate
+    Ax = quatrotate(Q, AxisVectors(1,:));
+    Ay = quatrotate(Q, AxisVectors(2,:));
+    Az = quatrotate(Q, AxisVectors(3,:));
     
-    % Rotate Axis Points
-    Qx = zeros(nLen, 3);
-    Qy = Qx;
-    Qz = Qx;
-    for i = 1:nLen
-        Qx(i,:) = [l 0 0] * M(:,:,i);
-        Qy(i,:) = [0 l 0] * M(:,:,i);
-        Qz(i,:) = [0 0 l] * M(:,:,i);
-    end
+    % Translate
+    Ax = P + Ax;
+    Ay = P + Ay;
+    Az = P + Az;
     
-    % Translate to position
-    Qx(:,1) = Qx(:,1) + x;
-    Qx(:,2) = Qx(:,2) + y;
-    Qx(:,3) = Qx(:,3) + z;
     
-    Qy(:,1) = Qy(:,1) + x;
-    Qy(:,2) = Qy(:,2) + y;
-    Qy(:,3) = Qy(:,3) + z;
-    
-    Qz(:,1) = Qz(:,1) + x;
-    Qz(:,2) = Qz(:,2) + y;
-    Qz(:,3) = Qz(:,3) + z;
-    
+    % Save the hold state so we can restore it later if needed
+    holdVal = ishold;
     
     % Plot em
-    h(1) = plot3(Qx(:,1), Qx(:,2), Qx(:,3), 'r');
-    h(2) = plot3(Qy(:,1), Qy(:,2), Qy(:,3), 'g');
-    h(3) = plot3(Qz(:,1), Qz(:,2), Qz(:,3), 'b');
-    h(4) = plot3(x, y, z, 'k');
+    plot3(P( :,1), P( :,2), P( :,3), 'k');   
+    hold on    
+    plot3(Ax(:,1), Ax(:,2), Ax(:,3), 'r'); 
+    plot3(Ay(:,1), Ay(:,2), Ay(:,3), 'g');
+    plot3(Az(:,1), Az(:,2), Az(:,3), 'b');
     
     % Plot Initial Axis Markers
-    h(5) = line([x(1) Qx(1,1)], [y(1) Qx(1,2)], [z(1) Qx(1,3)], 'Color', 'r', 'LineWidth', 2);
-    h(6) = line([x(1) Qy(1,1)], [y(1) Qy(1,2)], [z(1) Qy(1,3)], 'Color', 'g', 'LineWidth', 2);
-    h(7) = line([x(1) Qz(1,1)], [y(1) Qz(1,2)], [z(1) Qz(1,3)], 'Color', 'b', 'LineWidth', 2);
+    line([P(1,1) Ax(1,1)], [P(1,2) Ax(1,2)], [P(1,3) Ax(1,3)], 'Color', 'r', 'LineWidth', 2);
+    line([P(1,1) Ay(1,1)], [P(1,2) Ay(1,2)], [P(1,3) Ay(1,3)], 'Color', 'g', 'LineWidth', 2);
+    line([P(1,1) Az(1,1)], [P(1,2) Az(1,2)], [P(1,3) Az(1,3)], 'Color', 'b', 'LineWidth', 2);
+    
+    % Plot Final Axis Markers
+    line([P(end,1) Ax(end,1)], [P(end,2) Ax(end,2)], [P(end,3) Ax(end,3)], 'Color', 'r', 'LineWidth', 2);
+    line([P(end,1) Ay(end,1)], [P(end,2) Ay(end,2)], [P(end,3) Ay(end,3)], 'Color', 'g', 'LineWidth', 2);
+    line([P(end,1) Az(end,1)], [P(end,2) Az(end,2)], [P(end,3) Az(end,3)], 'Color', 'b', 'LineWidth', 2);
+    
+    % Restore the hold value
+    if ~holdVal
+        hold off
+    end
 end
-
