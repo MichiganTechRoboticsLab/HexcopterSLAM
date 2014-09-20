@@ -16,10 +16,10 @@ ReadVectorNavLog
 ReadHokuyoLog
 
 % Fuse GPS and IMU data
-%FuseRaw
+FuseRaw
 %FuseZeroAltitude
 %FuseLidarAltitude
-FuseCurbDetector
+%FuseCurbDetector
 
 
 
@@ -74,8 +74,9 @@ end
 pclviewer(Fusion_pointcloud')  
 
 
+return
 
-% Plot a single scan without translation
+%% Plot a single scan without translation
 figure(4); 
 nScanIndex = unique(Lidar_ScanIndex);
 for i = 1:length(nScanIndex)
@@ -87,7 +88,7 @@ for i = 1:length(nScanIndex)
     % Plot this scan
     set(0, 'CurrentFigure', 4);
     clf ;
-    plot3(Fusion_PointsRotated(I,1), Fusion_PointsRotated(I,2), Fusion_PointsRotated(I,3), '.b', 'MarkerSize', 2);
+    plot3(Fusion_PointsRotated(I,1), Fusion_PointsRotated(I,2), Fusion_PointsRotated(I,3), '.b', 'MarkerSize', 5);
     grid;
     hold on;       
     title('Lidar Scan Animation (Rotation Only)')
@@ -95,11 +96,12 @@ for i = 1:length(nScanIndex)
     % Show the oreintation at this scan
     q = Fusion_Q(I,:);
     PlotTraj3D([0, 0, 0], q(1,:), 1); 
-    axis equal;
+    axis([-5 6 -2 2 -10 0 ]); 
+    %axis equal;
     
     %view([-90 90]) % From Top
     %view([-90 0])  % From Left Side
-    %view([0 0])    % From Back
+    view([0 0])    % From Back
     %view([-25 0])   % Signs vn_1 dataset
     
     drawnow;
@@ -107,7 +109,7 @@ for i = 1:length(nScanIndex)
 end
          
 
-% Plot a single scan with translation
+%% Plot a single scan with translation
 figure(5); 
 nScanIndex = unique(Lidar_ScanIndex);
 for i = 1:length(nScanIndex)

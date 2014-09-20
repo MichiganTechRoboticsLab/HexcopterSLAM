@@ -14,6 +14,16 @@ end
 % Read the log file
 VectorNav_log = load(VectorNav_Logfile);
 
+% Manual ROI
+if ~exist('VectorNav_ROI_Start', 'var')
+    VectorNav_ROI_Start = 1;
+end
+if ~exist('VectorNav_ROI_End', 'var')
+    VectorNav_ROI_End   = size(VectorNav_log, 1);
+end
+VectorNav_log = VectorNav_log(VectorNav_ROI_Start:VectorNav_ROI_End, :);
+
+
 %
 % Reformat Data
 %
@@ -35,9 +45,9 @@ i = VectorNav_log(:,3) ~= 0;
 
 % Extract IMU Orientation
 IMU_Timestamp = VectorNav_log(i,1) + VectorNav_log(i,2) * 10E-7;
-IMU_Yaw   = deg2rad(VectorNav_log(i,3)) + deg2rad(20);
+IMU_Yaw   = deg2rad(VectorNav_log(i,3)) + deg2rad(IMU_YawBias);
 IMU_Pitch = deg2rad(VectorNav_log(i,4));
-IMU_Roll  = deg2rad(VectorNav_log(i,5));
+IMU_Roll  = deg2rad(VectorNav_log(i,5)) + deg2rad(IMU_RollBias);
 
 
 % Convert from LLA to Flat Earth (Metric) coodinates
