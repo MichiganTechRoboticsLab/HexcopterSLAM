@@ -16,8 +16,9 @@ ReadVectorNavLog
 ReadHokuyoLog
 
 % Fuse GPS and IMU data
-FuseRaw
+%FuseRaw
 %FuseZeroAltitude
+FuseLinearPath
 %FuseLidarAltitude
 %FuseCurbDetector
 
@@ -131,9 +132,9 @@ for i = 1:length(nScanIndex)
     % Show the oreintation at this scan
     nScale = 1;
     q = Fusion_Q(I,:);
-    PlotTraj3D([0, 0, 0], q(1,:), 1); 
+    PlotTraj3D(IMU_MetricPose(1,:), q(1,:), 1); 
 
-    %view([-90 90]) % From Top
+    view([-90 90]) % From Top
     %view([-90 0])  % From Left Side
     %view([0 0])    % From Back
     

@@ -52,13 +52,13 @@ axis square
 figure(4)
 clf
 subplot(3,1,1);
-plot(GPS_Timestamp, GPS_Longitude, '.r')
+plot(GPS_Timestamp - GPS_Timestamp(1), GPS_Longitude, '.r')
 title('GPS Longitude');
 subplot(3,1,2);
-plot(GPS_Timestamp, GPS_Lattitude, '.g')
+plot(GPS_Timestamp - GPS_Timestamp(1), GPS_Lattitude, '.g')
 title('GPS Latitude');
 subplot(3,1,3);
-plot(GPS_Timestamp, GPS_Altitude, '.b')
+plot(GPS_Timestamp - GPS_Timestamp(1), GPS_Altitude, '.b')
 title('GPS Altitude');
 
 
@@ -66,13 +66,13 @@ title('GPS Altitude');
 figure(5)
 clf
 subplot(3,1,1);
-plot(IMU_Timestamp, rad2deg(IMU_Pitch), '.r')
+plot(IMU_Timestamp - IMU_Timestamp(1), rad2deg(IMU_Pitch), '.r')
 title('IMU Pitch');
 subplot(3,1,2);
-plot(IMU_Timestamp, rad2deg(IMU_Roll), '.g')
+plot(IMU_Timestamp - IMU_Timestamp(1), rad2deg(IMU_Roll), '.g')
 title('IMU Roll');
 subplot(3,1,3);
-plot(IMU_Timestamp, rad2deg(IMU_Yaw), '.b')
+plot(IMU_Timestamp - IMU_Timestamp(1), rad2deg(IMU_Yaw), '.b')
 title('IMU Yaw');
 
 
@@ -102,13 +102,13 @@ view(63, 24)
 figure(8)
 clf
 subplot(3,1,1);
-plot(IMU_Timestamp, IMU_MetricPose(:,1), '.r')
+plot(IMU_Timestamp - IMU_Timestamp(1), IMU_MetricPose(:,1), '.r')
 title('IMU GPS Metric Pose (X)');
 subplot(3,1,2);
-plot(IMU_Timestamp, IMU_MetricPose(:,2), '.g')
+plot(IMU_Timestamp - IMU_Timestamp(1), IMU_MetricPose(:,2), '.g')
 title('IMU GPS Metric Pose (Y)');
 subplot(3,1,3);
-plot(IMU_Timestamp, IMU_MetricPose(:,3), '.b')
+plot(IMU_Timestamp - IMU_Timestamp(1), IMU_MetricPose(:,3), '.b')
 title('IMU GPS Metric Pose (Z)');
 
 
