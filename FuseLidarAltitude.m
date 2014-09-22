@@ -37,7 +37,10 @@ Z = zeros(10000,1);
 for i = 1:length(Fusion_PointsRotated)
     % Get this point's scan index
     nScan = Lidar_ScanIndex(i);
-        
+    
+    % Scan only directly under the UAV
+    I = Fusion_PointsRotated(:,)
+    
     % Find the lowest Z for this scan
     Z(nScan) = min(Fusion_PointsRotated(i,3), Z(nScan));
 end

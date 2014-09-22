@@ -17,7 +17,7 @@ VectorNav_ROI_End = 10000;
 
 
 %
-% Replace the GPS path with a line
+% FuseLinearPath: Replace the GPS path with a line
 %
 
 % BridgeDataset (First Pass Only)
@@ -35,7 +35,7 @@ Fuse_EndPos   = [0 60 0];
 
 % Bridge Dataset (First Pass Only)
 IMU_YawBias  = 110;
-IMU_RollBias = 13.2;
+IMU_RollBias = 11;
 
 
 

@@ -118,7 +118,7 @@ Lidar_Angles = repmat(a, size(r,1), 1);
 
 
 % Remove invalid range data (Too close or too far)
-I = or(Lidar_Ranges >= 25, Lidar_Ranges <= 0.35);
+I = or(Lidar_Ranges >= 25, Lidar_Ranges <= 0.6);
 Lidar_ScanIndex(I) = [];
 Lidar_Timestamp(I) = [];
 Lidar_Angles(I) = [];

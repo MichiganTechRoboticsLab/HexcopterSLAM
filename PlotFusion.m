@@ -20,8 +20,10 @@ ReadHokuyoLog
 %FuseZeroAltitude
 FuseLinearPath
 %FuseLidarAltitude
+FuseLidarAltitudeFilter
+%FuseLidarAltitude
 %FuseCurbDetector
-
+FuseBridgeDetector
 
 
 

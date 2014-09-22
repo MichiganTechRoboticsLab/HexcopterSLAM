@@ -16,6 +16,10 @@ clear I
 
 
 
+% Linearize the lidar timestamps
+start_T  = Lidar_Timestamp(1,:);
+end_T    = Lidar_Timestamp(end,:);
+Lidar_Timestamp = (start_T:(end_T-start_T)/(size(Lidar_Timestamp,1)-1):end_T)';
 
 % Generate the position based on a line
 start_T  = GPS_Timestamp(1,:);
@@ -23,7 +27,7 @@ end_T    = GPS_Timestamp(end,:);
 Fusion_Position = interp1([start_T end_T], [Fuse_StartPos; Fuse_EndPos], Lidar_Timestamp);
 
 
-% Get rid of the oreintation data too
+% Get rid of the orientation data
 start_T  = IMU_Timestamp(1,:);
 end_T    = IMU_Timestamp(end,:);
 Fusion_Q = interp1([start_T end_T], [IMU_Q(1,:); IMU_Q(end,:)], Lidar_Timestamp);
