@@ -10,7 +10,7 @@
 
 
 % Load Data
-Header
+SetParameters
 ReadVectorNavLog
 
 

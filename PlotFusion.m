@@ -11,7 +11,7 @@
 %  Plots the orientation, pose, and each scan one at a time. (animation)
 
 % Load Data
-Header
+SetParameters
 ReadVectorNavLog
 ReadHokuyoLog
 

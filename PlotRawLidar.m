@@ -3,7 +3,7 @@
 
 
 % Load Data
-Header
+SetParameters
 ReadHokuyoLog
 
 
