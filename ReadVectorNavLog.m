@@ -14,13 +14,23 @@ end
 % Read the log file
 VectorNav_log = load(VectorNav_Logfile);
 
-% Manual ROI
+
+% Default Parameters
 if ~exist('VectorNav_ROI_Start', 'var')
     VectorNav_ROI_Start = 1;
 end
 if ~exist('VectorNav_ROI_End', 'var')
-    VectorNav_ROI_End   = size(VectorNav_log, 1);
+    VectorNav_ROI_End  = size(VectorNav_log, 1);
 end
+if ~exist('IMU_YawBias', 'var')
+    IMU_YawBias = 0;
+end
+if ~exist('IMU_RollBias', 'var')
+    IMU_RollBias = 0;
+end
+
+
+% ROI
 VectorNav_log = VectorNav_log(VectorNav_ROI_Start:VectorNav_ROI_End, :);
 
 
@@ -61,12 +71,6 @@ GPS_MetricPose(:,3) = 1 * GPS_MetricPose(:,3);
 
 % Interpolate the GPS pose for each IMU orientation (metric)
 IMU_MetricPose = interp1(GPS_Timestamp, GPS_MetricPose, IMU_Timestamp);
-
-% TH: normalize the Yaw to assume the Hex is moving forward
-% DAW: I dont think this works for the general case. The VectorNav manual
-%      says 0deg should point north. I think we need to have a parameter
-%      for each dataset to add some bias to the yaw to compensate.
-% IMU_Yaw = IMU_Yaw - IMU_Yaw(1);
 
 % Generate Quaternions for linear interpolation of rotations
 % (NOTE: Matlab quatRotate uses a NED coord system, so the usual rotations

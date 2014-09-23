@@ -5,6 +5,11 @@
 %  This script assumes that a FuseXYZ filter has been executed on the data
 %  such as FuseRaw or FuseLinear
 
+% Width of lidar data from the center of the scan to use for 
+% altitude estimation
+if ~exist('Fuse_LidarAltitude_Width', 'var')
+   Fuse_LidarAltitude_Width = 100; % meters 
+end
 
 % Estimated Altitude
 Z = zeros(max(Lidar_ScanIndex),1);
@@ -18,25 +23,27 @@ for i = 1:length(nScanIndex)
     p = Fusion_PointsRotated(I,:);
     
     % Ignore all points not under the UAV
-    I = abs(p(:,1)) < 0.5;
+    I = sqrt(p(:,1).^2 + p(:,2).^2) < Fuse_LidarAltitude_Width;
     
     % Find the lowest Z for this scan, and use that for our estimate
+    % If you get an error about an empty matrix here, enlarge the ROI.
     Z(nIndex) = min(p(I,3));
 end
-
-% TODO: Lowpass the estimate
 
 % Loop through each poins
 for i = 1:length(Fusion_Position)
     % Get this point's scan index
     nScan = Lidar_ScanIndex(i);
     
-    % Find the lowest Z for this scan
-    Fusion_Position(i,3) = Fusion_Position(i,3) - Z(nScan);
+    % Find the altitude for this scan
+    Fusion_Position(i,3) = -Z(nScan);
 end
-
-
 
 % Translate all points by their translation
 Fusion_pointcloud = Fusion_PointsRotated + Fusion_Position;
+
+
+
+
+
 

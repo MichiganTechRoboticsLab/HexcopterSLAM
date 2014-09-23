@@ -16,15 +16,31 @@ ReadVectorNavLog
 ReadHokuyoLog
 
 % Fuse GPS and IMU data
+
+% List of filters/estimators
 %FuseRaw
 %FuseZeroAltitude
-FuseLinearPath
+%FuseLinearPath
 %FuseLidarAltitude
-FuseLidarAltitudeFilter
 %FuseLidarAltitude
+%FuseLidarAltitudeFilter
 %FuseCurbDetector
-FuseBridgeDetector
+%FuseBridgeDetector
 
+switch DatasetName
+    case 'bridge'        
+        FuseLinearPath
+        FuseLidarAltitudeFilter
+        FuseSingleFirstDiffFilter
+        
+    case 'signs'
+        FuseRaw
+        FuseLidarAltitudeFilter
+        FuseSingleFirstDiffFilter
+        
+    otherwise
+        FuseRaw
+end
 
 
 

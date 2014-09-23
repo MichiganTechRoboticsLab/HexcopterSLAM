@@ -17,6 +17,13 @@ if ~exist(Hokuyo_Logfile, 'file')
     error('Hokuyo Logfile not found')
 end
 
+% Check if this file has already been parsed
+matfile = strrep(Hokuyo_Logfile, '.csv', '.mat');
+if exist(matfile, 'file')
+    disp('INFO: Lidar data already parsed, importing from .mat file.')
+    load(matfile)
+end
+
 % Read the Lidar Data from HDD only when nessisary
 if exist('Lidar_Log', 'var')
     disp('INFO: Lidar data already loaded, skipping import from HDD.')
@@ -94,6 +101,9 @@ else
     
     % Record number of scans read
     Lidar_ScanCount = nScan;
+   
+    % Save parsed data to speed up load next time
+    save(matfile, 'Lidar_*');
 end
 
 % Grab all range measurements from Lidar data
