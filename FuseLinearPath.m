@@ -52,7 +52,7 @@ Fusion_Position = interp1([start_T end_T], [Fuse_StartPos; Fuse_EndPos], Lidar_T
 % Get rid of the orientation data
 start_T  = IMU_Timestamp(1,:);
 end_T    = IMU_Timestamp(end,:);
-Fusion_Q = interp1([start_T end_T], [IMU_Q(1,:); IMU_Q(end,:)], Lidar_Timestamp);
+Fusion_Q = interp1([start_T end_T], [IMU_Q(1,:); IMU_Q(1,:)], Lidar_Timestamp);
 
 % Rotate all points by their orientation
 Fusion_PointsRotated = quatrotate(Fusion_Q, [Lidar_X, Lidar_Y, zeros(size(Lidar_X))]);

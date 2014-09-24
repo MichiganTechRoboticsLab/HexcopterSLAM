@@ -13,11 +13,17 @@ clf;
 polar(Lidar_Angles, Lidar_Ranges, '.b');
 
 
+% Identify missing data / Bad timestamps
+figure(2)
+clf  
+plot(diff(Lidar_Timestamp), '.r')
+title('Missing Data Identification (GPS)')
+
 
 % Plot each scan individually
 nScanIndex = unique(Lidar_ScanIndex);
 
-figure(2);
+figure(3);
 for i = 1:length(nScanIndex)
    
     % Retrieve each scan's points
@@ -27,7 +33,7 @@ for i = 1:length(nScanIndex)
     lr = Lidar_Ranges(I,:);
     
     % Plot the scan
-    set(0, 'CurrentFigure', 2);
+    set(0, 'CurrentFigure', 3);
     clf;
     polar(0, 25, '.r'); % axis limit hack
     hold on

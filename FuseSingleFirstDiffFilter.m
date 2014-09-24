@@ -147,7 +147,7 @@ for i = 1:length(nScanIndex)
 
     %     Update Displays
         drawnow();
-        pause(0.1);
+        pause(0.01);
     end
 end
 pointcloud = pc;

@@ -28,6 +28,11 @@ ReadHokuyoLog
 %FuseBridgeDetector
 
 switch DatasetName
+    case 'curbs'      
+        FuseLinearPath
+        FuseLidarAltitudeFilter
+        FuseSingleFirstDiffFilter
+        
     case 'bridge'        
         FuseLinearPath
         FuseLidarAltitudeFilter
@@ -62,24 +67,24 @@ grid
 
 
 % Plot the interpolated orientations and the original orientation path
-figure(2)
-clf
-PlotTraj3D(IMU_MetricPose, IMU_Q, 1);
-hold on
+% figure(2)
+% clf
+% PlotTraj3D(IMU_MetricPose, IMU_Q, 1);
+% hold on
+% 
+% PlotTraj3D(Fusion_Position, Fusion_Q, 1);
+% axis equal
+% grid
+% title('IMU Orientation & GPS Pose')
 
-PlotTraj3D(Fusion_Position, Fusion_Q, 1);
-axis equal
-grid
-title('IMU Orientation & GPS Pose')
 
-
-% Plot the full point cloud
-figure(3)
-clf 
-grid
-plot3(Fusion_pointcloud(:,1), Fusion_pointcloud(:,2), Fusion_pointcloud(:,3), '.b', 'MarkerSize', 2)
-axis equal
-hold on; 
+% % Plot the full point cloud
+% figure(3)
+% clf 
+% grid
+% plot3(Fusion_pointcloud(:,1), Fusion_pointcloud(:,2), Fusion_pointcloud(:,3), '.b', 'MarkerSize', 2)
+% axis equal
+% hold on; 
 
 
 
