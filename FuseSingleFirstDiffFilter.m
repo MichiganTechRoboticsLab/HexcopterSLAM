@@ -107,7 +107,7 @@ for i = 1:length(nScanIndex)
 
     %     Curb ROI Display
         subplot(4,1,1);
-        plot(pc(I,3), '.r');
+        plot(cp(:,3), '.r');
         plot(ROIx, ROIy(:,3), '.b');
         title(['Scan:' num2str(nIndex)]);
 
@@ -176,6 +176,13 @@ cp = dp * EP;
 
 % Translate back to original frame
 cp = bsxfun(@plus, cp, start_pt);
+
+
+
+% Low-pass the position vectors
+a = 0.5;
+Fusion_Position = filter(a, [1 a-1], Fusion_Position);
+
 
 
 % Update the points in the point cloud to align the curb.

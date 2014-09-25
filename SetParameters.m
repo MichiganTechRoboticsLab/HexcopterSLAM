@@ -1,7 +1,7 @@
 
 % Current dataset files
 
-DatasetName = 'curbs';
+DatasetName = 'bridge';
 
 VectorNav_Logfile = ['C:\Users\Dereck\Documents\DataSets\' DatasetName '\vn.csv'];
 Hokuyo_Logfile = ['C:\Users\Dereck\Documents\DataSets\' DatasetName '\lidar_data.csv'];
@@ -31,17 +31,17 @@ switch DatasetName
         VectorNav_ROI_End = 10000;
         
         IMU_RollBias = 11;
-        IMU_YawBias  = 110;
+        IMU_YawBias  = 115;
         
         Fuse_StartPos = [0 0  0];
         Fuse_EndPos   = [0 60 0];
         
-        Fuse_LidarAltitude_Width = 0.5;
+        Fuse_LidarAltitude_Width = 2;
         
         Fuse_Curb_X = 200;         
-        Fuse_Diff_ROI_width = 50;
+        Fuse_Diff_ROI_width = 30;
         Fuse_Diff_ROI_Z_min = 0; 
-        Fuse_Diff_ROI_Z_max = 0.3;
+        Fuse_Diff_ROI_Z_max = 0.5;
         
     case 'signs'
         VectorNav_ROI_Start =  8500;

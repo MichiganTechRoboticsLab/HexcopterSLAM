@@ -67,15 +67,15 @@ grid
 
 
 % Plot the interpolated orientations and the original orientation path
-% figure(2)
-% clf
-% PlotTraj3D(IMU_MetricPose, IMU_Q, 1);
-% hold on
-% 
-% PlotTraj3D(Fusion_Position, Fusion_Q, 1);
-% axis equal
-% grid
-% title('IMU Orientation & GPS Pose')
+figure(2)
+clf
+PlotTraj3D(IMU_MetricPose, IMU_Q, 1);
+hold on
+
+PlotTraj3D(Fusion_Position, Fusion_Q, 1);
+axis equal
+grid
+title('IMU Orientation & GPS Pose')
 
 
 % % Plot the full point cloud
@@ -166,3 +166,4 @@ for i = 1:length(nScanIndex)
 end
        
        
+
