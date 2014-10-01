@@ -12,6 +12,9 @@ Lidar_X(I) = [];
 Lidar_Y(I) = [];
 clear I
 
+% Timestamp associated with the Fused Pose data.
+Fusion_Timestamp = Lidar_Timestamp;
+
 % Get the GPS based position of the sensor for each hit
 Fusion_Position = interp1(GPS_Timestamp, GPS_MetricPose, Lidar_Timestamp);
 

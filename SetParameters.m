@@ -1,7 +1,7 @@
 
 % Current dataset files
 
-DatasetName = 'bridge';
+DatasetName = 'signs';
 
 VectorNav_Logfile = ['C:\Users\Dereck\Documents\DataSets\' DatasetName '\vn.csv'];
 Hokuyo_Logfile = ['C:\Users\Dereck\Documents\DataSets\' DatasetName '\lidar_data.csv'];
