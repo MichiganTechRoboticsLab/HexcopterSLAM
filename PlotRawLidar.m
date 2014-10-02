@@ -17,7 +17,7 @@ polar(Lidar_Angles, Lidar_Ranges, '.b');
 figure(2)
 clf  
 plot(diff(Lidar_Timestamp), '.r')
-title('Missing Data Identification (GPS)')
+title('Missing Data Identification')
 
 
 % Plot each scan individually

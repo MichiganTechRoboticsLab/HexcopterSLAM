@@ -1,15 +1,27 @@
 
 % Current dataset files
+DatasetName = 'LabTest';
 
-DatasetName = 'signs';
 
-VectorNav_Logfile = ['C:\Users\Dereck\Documents\DataSets\' DatasetName '\vn.csv'];
-Hokuyo_Logfile = ['C:\Users\Dereck\Documents\DataSets\' DatasetName '\lidar_data.csv'];
+% Set path based on OS
+if ispc()
+    DataPath = 'C:\Users\Dereck\Documents\DataSets\';
+    VectorNav_Logfile = [DataPath DatasetName '\vn.csv'];
+    Hokuyo_Logfile = [DataPath DatasetName '\lidar_data.csv']; 
+    Camera_Path = [DataPath DatasetName '\pics\'];
+end
+if isunix()
+    VectorNav_Logfile = ['/home/dereck/Documents/DataSets' DatasetName '/vn.csv'];
+    Hokuyo_Logfile = ['/home/dereck/Documents/DataSets' DatasetName '/lidar_data.csv'];  
+end
 
 
 % Kludge parameters for each dataset
 switch DatasetName
     case 'curbs'
+        VectorNav_LogFormat = 1;
+        Lidar_LogFormat = 1;
+        
         VectorNav_ROI_Start = 4000;
         VectorNav_ROI_End   = 6000;
                 
@@ -27,6 +39,9 @@ switch DatasetName
         Fuse_Diff_ROI_Z_max = 0.3;
         
     case 'bridge'
+        VectorNav_LogFormat = 1;
+        Lidar_LogFormat = 1;
+        
         VectorNav_ROI_Start = 3000;
         VectorNav_ROI_End = 10000;
         
@@ -44,6 +59,9 @@ switch DatasetName
         Fuse_Diff_ROI_Z_max = 0.5;
         
     case 'signs'
+        VectorNav_LogFormat = 1;
+        Lidar_LogFormat = 1;
+        
         VectorNav_ROI_Start =  8500;
         VectorNav_ROI_End   = 10750;
         
