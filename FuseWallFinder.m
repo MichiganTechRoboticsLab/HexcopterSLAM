@@ -1,33 +1,19 @@
-% FuseSingleFirstDiffFilter.m
-%  This filter searches an ROI for the largest first difference and then
-%  uses that point to allign the data across all scans. This works well
-%  when there is a single rising edge that appears through the entire
-%  dataset and the path of the UAV is nearly linear. Curbs on the edges of
-%  roads, for example, work well. 
-%
-%  Before calling this script, use one of the other fuse scripts to
-%  generate the initial point cloud, and this script will then apply 
-%  dataset specific huristics to finish the alignment process. 
-%
-%  After finding the point where the first difference is maximum, the point
-%  is snapped to a line defined by the first and last detected 'curb' point
-%  in the dataset. It would be nice to be able to super sample the region
-%  around the curb to get a better location estimate somehow.
-
+% Fuse Wall Finder.m
+%  Use a wall for aligning scans.
 
 
 % Default Parameters
-if ~exist('Fuse_Curb_X', 'var')
+if ~exist('Fuse_wall_X', 'var')
    Fuse_Curb_X = 0; 
 end
 if ~exist('Fuse_Diff_ROI_width', 'var')
-   Fuse_Diff_ROI_width = 1000;
+   Fuse_Diff_ROI_width = 30;
 end
 if ~exist('Fuse_Diff_ROI_Z_min', 'var')
-   Fuse_Diff_ROI_Z_min = -100; 
+   Fuse_Diff_ROI_Z_min = 2; 
 end
 if ~exist('Fuse_Diff_ROI_Z_max', 'var')
-   Fuse_Diff_ROI_Z_max = 100;
+   Fuse_Diff_ROI_Z_max = 5;
 end
 
 
@@ -44,7 +30,7 @@ figure(1);
 
 % This is the point in each scan that is detected as the curb
 Curb_Point = [];
-
+CurbX = Fuse_Curb_X;
 
 % Loop through all scans
 nScanIndex = unique(Lidar_ScanIndex);
@@ -61,11 +47,11 @@ for i = 1:length(nScanIndex)
     end
     
     
-    % Remove Points outside of the ROI (Z)
+    % Remove Points outside of the ROI
     I = cs(:,3) < Fuse_Diff_ROI_Z_min | cs(:,3) > Fuse_Diff_ROI_Z_max;
     cs(I,:) = [];
     
-    start_ROI = Fuse_Curb_X - Fuse_Diff_ROI_width;
+    start_ROI = CurbX - Fuse_Diff_ROI_width;
     if start_ROI < 1 
         start_ROI = 1;
     end
@@ -78,74 +64,36 @@ for i = 1:length(nScanIndex)
     ROIy = cs(start_ROI:end_ROI, :);
     
     
-    % Low-Pass Filter
-    a = 0.98;
-    f = filter(a, [1 a-1], ROIy(:,3));
-    
-    % Find Curb with First Difference 
-    d = diff(f);
-    
-    % Low-Pass Filter
-    a = 0.3;
-    F = filter(a, [1 a-1], d);
-    
-    % Find curb
-    [val, ind] = max(F);
-    xMax = ROIx(ind);
-    Curb_Point(i,:) = cs(xMax,:);
+    [c, maxX] = max(ROIy(:,3));
     
     % Update the ROI center
-    Fuse_Curb_X = xMax;
+    CurbX = ROIx(maxX);
   
+    % Find the wall
+    Curb_Point(i,:) = cs(CurbX,:);
+    
     
 % 
 %     Debug plots
 % 
-    if 1
+    if 0
         set(0, 'CurrentFigure', 1);
         clf;
-
-    %     Curb ROI Display
-        subplot(4,1,1);
-        plot(cs(:,3), '.r');
-        plot(ROIx, ROIy(:,3), '.b');
+        
+    %   ROI Display
+        subplot(1,1,1);
+        plot(ROIy(:,1), ROIy(:,3), '.b');
         title(['Scan:' num2str(nIndex)]);
 
-    %     Low pass filter
-        subplot(4,1,2);
-        plot(ROIx, f, '.b');
-        title('Low Pass Filter');
-
-    %     First Diff display
-        subplot(4,1,3);
-        plot(ROIx(2:end), d, '-r');
-        title('First Order Diff');
-
-    %     Low pass filter
-        subplot(4,1,4);
-        plot(ROIx(2:end), F, '-r');
-        title('Low Pass Filter');
 
 
-    %     Curb Location Displays 
-        subplot(4,1,1);
+
+    %   Curb Location Displays 
+        subplot(1,1,1);
         hold on;
-        plot([xMax xMax], [min(ROIy(:,3)) max(ROIy(:,3))], '-g');
+        plot([ROIy(CurbX,1) ROIy(CurbX,1)], [min(ROIy(:,3)) max(ROIy(:,3))], '-g');
 
-        subplot(4,1,2);
-        hold on;
-        plot([xMax xMax], [min(f) max(f)], '-g');
-
-        subplot(4,1,3);
-        hold on;
-        plot([xMax xMax], [min(d) max(d)], '-g');
-
-        subplot(4,1,4);
-        hold on;
-        plot([xMax xMax], [min(F) max(F)], '-g');
-
-
-    %     Update Displays
+    %   Update Displays
         drawnow();
         pause(0.1);
     end

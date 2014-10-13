@@ -10,25 +10,25 @@
 
 
 % Ignore entries where no GPS data was available
-i = VectorNav_log(:,6) ~= 0;
+i = VectorNav_Log(:,6) ~= 0;
 
 % Combine Timestamp into single element
-GPS_Timestamp = VectorNav_log(i,1) + VectorNav_log(i,2) * 10E-7;
+GPS_Timestamp = VectorNav_Log(i,1) + VectorNav_Log(i,2) * 10E-7;
 
 % Extract GPS coodinates
-GPS_Lattitude = VectorNav_log(i,6);
-GPS_Longitude = VectorNav_log(i,7);
-GPS_Altitude  = VectorNav_log(i,8);
+GPS_Lattitude = VectorNav_Log(i,6);
+GPS_Longitude = VectorNav_Log(i,7);
+GPS_Altitude  = VectorNav_Log(i,8);
 
 
 % Ignore entries where no IMU data was available
-i = VectorNav_log(:,3) ~= 0;
+i = VectorNav_Log(:,3) ~= 0;
 
 % Extract IMU Orientation
-IMU_Timestamp = VectorNav_log(i,1) + VectorNav_log(i,2) * 10E-7;
-IMU_Yaw   = deg2rad(VectorNav_log(i,3)) + deg2rad(IMU_YawBias);
-IMU_Pitch = deg2rad(VectorNav_log(i,4));
-IMU_Roll  = deg2rad(VectorNav_log(i,5)) + deg2rad(IMU_RollBias);
+IMU_Timestamp = VectorNav_Log(i,1) + VectorNav_Log(i,2) * 10E-7;
+IMU_Yaw   = deg2rad(VectorNav_Log(i,3)) + deg2rad(IMU_YawBias);
+IMU_Pitch = deg2rad(VectorNav_Log(i,4));
+IMU_Roll  = deg2rad(VectorNav_Log(i,5)) + deg2rad(IMU_RollBias);
 
 
 if size(GPS_Lattitude,1) > 0 

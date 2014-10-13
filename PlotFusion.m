@@ -16,18 +16,14 @@ ReadVectorNavLog
 ReadHokuyoLog
 
 % Fuse GPS and IMU data
-
-% List of filters/estimators
-%FuseRaw
-%FuseZeroAltitude
-%FuseLinearPath
-%FuseLidarAltitude
-%FuseLidarAltitude
-%FuseLidarAltitudeFilter
-%FuseCurbDetector
-%FuseBridgeDetector
-
 switch DatasetName
+    case 'construction'
+        FuseRaw
+        FilterLinearQ
+        FuseLidarAltitudeFilter
+        FuseWallFinder
+        FuseLidarAltitudeFilter
+        
     case 'curbs'      
         FuseLinearPath
         FuseLidarAltitudeFilter
@@ -78,13 +74,15 @@ grid
 title('IMU Orientation & GPS Pose')
 
 
-% % Plot the full point cloud
-% figure(3)
-% clf 
-% grid
-% plot3(Fusion_pointcloud(:,1), Fusion_pointcloud(:,2), Fusion_pointcloud(:,3), '.b', 'MarkerSize', 2)
-% axis equal
-% hold on; 
+% Plot the point cloud
+n = size(Fusion_pointcloud,1);
+I = randsample(n,min(n,10000));
+figure(3)
+clf 
+grid
+plot3(Fusion_pointcloud(I,1), Fusion_pointcloud(I,2), Fusion_pointcloud(I,3), '.b', 'MarkerSize', 2)
+axis equal
+hold on; 
 
 
 
@@ -95,10 +93,28 @@ if ~exist('pclviewer.m', 'file')
         addpath('matpcl');
     end
 end
-pclviewer(Fusion_pointcloud')  
 
+% View the Full Pointcloud
+pclviewer(Fusion_pointcloud') 
+
+% Pointcloud ROI
+% pc = Fusion_pointcloud;
+% I = (pc(:,3) < -0.5) | (pc(:,2) < 10) | (pc(:,2) > 50);
+% pc(I,:) = [];
+% 
+% n = size(pc,1);
+% I = randsample(n,min(n,10000));
+% figure(3)
+% clf 
+% grid
+% plot3(pc(I,1), pc(I,2), pc(I,3), '.b', 'MarkerSize', 2)
+% axis equal
+% hold on; 
+%pclviewer(pc') 
+ 
 
 return
+
 
 %% Plot a single scan without translation
 figure(4); 
@@ -121,7 +137,7 @@ for i = 1:length(nScanIndex)
     q = Fusion_Q(I,:);
     PlotTraj3D([0, 0, 0], q(1,:), 1); 
     axis([-5 6 -2 2 -10 0 ]); 
-    %axis equal;
+    axis equal;
     
     %view([-90 90]) % From Top
     %view([-90 0])  % From Left Side
@@ -129,9 +145,10 @@ for i = 1:length(nScanIndex)
     %view([-25 0])   % Signs vn_1 dataset
     
     drawnow;
-    pause(0.01);
+    pause(0.04);
 end
          
+return 
 
 %% Plot a single scan with translation
 figure(5); 

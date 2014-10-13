@@ -22,10 +22,12 @@ if ~exist('plot_google_map.m', 'file')
 end
 
 
-% Plot GPS track over a Google Maps image
+% Plot GPS track over a Google Maps image6
 figure(1)
 clf
-plot(GPS_Longitude, GPS_Lattitude, '.r', 'MarkerSize', 3) 
+plot(GPS_Longitude, GPS_Lattitude, '-r', 'MarkerSize', 1)
+hold on;
+plot(GPS_Longitude, GPS_Lattitude, '+r', 'MarkerSize', 3) 
 plot_google_map('MapType', 'hybrid')  % Dont forget to add to path
 title('GPS Track');
 
@@ -42,10 +44,10 @@ grid
 % Plot the GPS track in 3D
 figure(3)
 clf
-plot3(GPS_Longitude, GPS_Lattitude, GPS_Altitude, '.r', 'MarkerSize', 20) 
+plot3(IMU_MetricPose(:,1), IMU_MetricPose(:,2), IMU_MetricPose(:,3), '.r', 'MarkerSize', 20) 
 title('GPS Track (3D)');
 grid
-axis square
+axis equal
 
 
 % Plot the raw GPS location data

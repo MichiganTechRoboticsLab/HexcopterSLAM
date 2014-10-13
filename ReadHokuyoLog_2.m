@@ -47,8 +47,14 @@ end
 I = 3:6:6484;
 Lidar_Ranges = Lidar_Log(:, I);
 
-% Timestamp
-Lidar_Timestamp = Lidar_Log(:, 1);
+% System Timestamp
+Lidar_Timestamp_System = Lidar_Log(:, 1);
+
+% Sensor Timestamp
+Lidar_Sensor_Timestamp = Lidar_Log(:, 2) / 1000;
+
+% Combined Timestamp
+Lidar_Timestamp = Lidar_Timestamp_System(1) - Lidar_Sensor_Timestamp(1) + Lidar_Sensor_Timestamp;
 
 % Scan Index
 Lidar_ScanIndex = (1:Lidar_ScanCount)';
@@ -76,7 +82,7 @@ Lidar_Ranges = Lidar_Ranges / 1000;
 
 
 % Remove invalid range data (Too close or too far)
-I = Lidar_Ranges < 0.5 | Lidar_Ranges > 30;
+I = Lidar_Ranges < 0.75 | Lidar_Ranges > 30;
 Lidar_ScanIndex(I) = [];
 Lidar_Timestamp(I) = [];
 Lidar_Angles(I) = [];

@@ -12,24 +12,24 @@
 % Extract GPS coodinates
 
 % Ignore entries where no GPS data was available
-i = VectorNav_log(:,9) ~= 0;
+i = VectorNav_Log(:,9) ~= 0;
 
-GPS_Timestamp = VectorNav_log(i,1);
-GPS_Lattitude = VectorNav_log(i,9);
-GPS_Longitude = VectorNav_log(i,10);
-GPS_Altitude  = VectorNav_log(i,11);
+GPS_Timestamp = VectorNav_Log(i,1);
+GPS_Lattitude = VectorNav_Log(i,9);
+GPS_Longitude = VectorNav_Log(i,10);
+GPS_Altitude  = VectorNav_Log(i,11);
 
 
 
 % Extract IMU Orientation
 
 % Ignore entries where no IMU data was available
-i = VectorNav_log(:,5) ~= 0;
+i = VectorNav_Log(:,5) ~= 0;
 
-IMU_Timestamp = VectorNav_log(i,1);
+IMU_Timestamp = VectorNav_Log(i,1);
 
 % Quaternion format: X Y Z W
-IMU_Q = VectorNav_log(i,5:8);
+IMU_Q = [VectorNav_Log(i,8) VectorNav_Log(i,5:7)];
 
 % Convert to YPR
 [IMU_Yaw, IMU_Roll, IMU_Pitch] = quat2angle(IMU_Q);

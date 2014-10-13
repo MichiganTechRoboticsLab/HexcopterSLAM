@@ -1,6 +1,6 @@
 
 % Current dataset files
-DatasetName = 'LabTest';
+DatasetName = 'construction';
 
 
 % Set path based on OS
@@ -18,6 +18,29 @@ end
 
 % Kludge parameters for each dataset
 switch DatasetName
+    case 'construction'
+        VectorNav_LogFormat = 2;
+        Lidar_LogFormat = 2;
+        
+        % First Flight
+        %VectorNav_ROI_Start = 15000;
+        %VectorNav_ROI_End   = 44000;
+        
+        % First Pass
+        VectorNav_ROI_Start = 15000;
+        VectorNav_ROI_End   = 18600;
+        
+        IMU_RollBias  = 0;
+        IMU_PitchBias = -90;
+        IMU_YawBias   = 180+12;
+        
+        Fuse_LidarAltitude_Width = 200;
+        
+        Fuse_Curb_X = 0;         
+        Fuse_Diff_ROI_width = 30;
+        Fuse_Diff_ROI_Z_min = 2; 
+        Fuse_Diff_ROI_Z_max = 6;
+        
     case 'curbs'
         VectorNav_LogFormat = 1;
         Lidar_LogFormat = 1;
@@ -74,6 +97,7 @@ switch DatasetName
         Fuse_Diff_ROI_width = 20;
         Fuse_Diff_ROI_Z_min = -0.5; 
         Fuse_Diff_ROI_Z_max =  1.5;
+        
 end
 
 

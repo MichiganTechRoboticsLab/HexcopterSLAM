@@ -24,10 +24,20 @@ for i = 1:length(nScanIndex)
     
     % Ignore all points not under the UAV
     I = sqrt(p(:,1).^2 + p(:,2).^2) < Fuse_LidarAltitude_Width;
+    p = p(I,:);
+    
+    if 0
+        figure(20);
+        clf
+        plot3(p(:,1), p(:,2), p(:,3), '.')
+        axis equal
+        drawnow
+        pause(0.1);
+    end 
     
     % Find the lowest Z for this scan, and use that for our estimate
     % If you get an error about an empty matrix here, enlarge the ROI.
-    Z(nIndex) = min(p(I,3));
+    Z(nIndex) = min(p(:,3));
 end
 
 % Loop through each poins
