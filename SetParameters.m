@@ -1,6 +1,6 @@
 
 % Current dataset files
-DatasetName = 'construction';
+DatasetName = 'railyard\up';
 
 
 % Set path based on OS
@@ -18,6 +18,13 @@ end
 
 % Kludge parameters for each dataset
 switch DatasetName
+    case 'railyard\up'
+        VectorNav_LogFormat = 2;
+        Lidar_LogFormat = 2;
+        
+        Fuse_StartPos = [0 0  0];
+        Fuse_EndPos   = [0 40 0];
+        
     case 'construction'
         VectorNav_LogFormat = 2;
         Lidar_LogFormat = 2;

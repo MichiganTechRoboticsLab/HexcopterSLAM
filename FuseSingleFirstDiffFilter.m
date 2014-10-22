@@ -101,7 +101,7 @@ for i = 1:length(nScanIndex)
 % 
 %     Debug plots
 % 
-    if 1
+    if 0
         set(0, 'CurrentFigure', 1);
         clf;
 
