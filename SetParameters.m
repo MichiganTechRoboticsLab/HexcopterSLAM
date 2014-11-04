@@ -1,29 +1,59 @@
+% Set up dataset-specific parameters
 
-% Current dataset files
-DatasetName = 'railyard\up';
+% I put all of my datasets in their own folders, the folder name is the
+% dataset name. The new sensor logging script should make a new folder for
+% every dataset with a timestamp for a dataset name. The timestamp will 
+% probalby be wrong because their is no RTC on the jetson. Simply copy
+% these datasets to your datasets folder and change the plot.
+
+% Current dataset name
+% Always clear the workspace when changing datasets!
+DatasetName = ['railyard' filesep 'uav1'];
 
 
 % Set path based on OS
+% You will need to point this to the root of your dataset collection
 if ispc()
-    DataPath = 'C:\Users\Dereck\Documents\DataSets\';
+    DataPath = 'C:\Users\Dereck\My Documents\DataSets\';
     VectorNav_Logfile = [DataPath DatasetName '\vn.csv'];
     Hokuyo_Logfile = [DataPath DatasetName '\lidar_data.csv']; 
     Camera_Path = [DataPath DatasetName '\pics\'];
 end
 if isunix()
-    VectorNav_Logfile = ['/home/dereck/Documents/DataSets' DatasetName '/vn.csv'];
-    Hokuyo_Logfile = ['/home/dereck/Documents/DataSets' DatasetName '/lidar_data.csv'];  
+    DataPath = '/home/dereck/DataSets/';
+    VectorNav_Logfile = [DataPath DatasetName '/vn.csv'];
+    Hokuyo_Logfile = [DataPath DatasetName '/lidar_data.csv'];  
 end
 
 
 % Kludge parameters for each dataset
-switch DatasetName
-    case 'railyard\up'
+switch DatasetName 
+    case ['railyard' filesep 'uav1']
         VectorNav_LogFormat = 2;
         Lidar_LogFormat = 2;
         
-        Fuse_StartPos = [0 0  0];
-        Fuse_EndPos   = [0 40 0];
+        % Both Passes
+        %VectorNav_ROI_Start = 23500;
+        %VectorNav_ROI_End   = 36000;
+        
+        % First Pass
+        VectorNav_ROI_Start = 23500;
+        VectorNav_ROI_End   = 28500;        
+        
+        % IMU Bias
+        IMU_YawBias    = -40;
+        IMU_RollBias   = -2;
+        IMU_PitchBias  =  0;
+        
+        % First Diff Filter
+        Fuse_Diff_ROI_Z_max = 2;
+        Fuse_Curb_X = 250;
+        Fuse_Diff_ROI_width = 20;
+        
+    case 'railyard\up'
+        VectorNav_LogFormat = 0;
+        Lidar_LogFormat = 2;
+                
         
     case 'construction'
         VectorNav_LogFormat = 2;

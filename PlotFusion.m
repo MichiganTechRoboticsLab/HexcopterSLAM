@@ -17,6 +17,11 @@ ReadHokuyoLog
 
 % Fuse GPS and IMU data
 switch DatasetName
+    case ['railyard' filesep 'uav1']
+        FuseRaw
+        FuseLidarAltitudeFilter
+        FuseSingleFirstDiffFilter
+        
     case 'construction'
         FuseRaw
         FilterLinearQ
@@ -97,20 +102,24 @@ end
 % View the Full Pointcloud
 pclviewer(Fusion_pointcloud') 
 
-% Pointcloud ROI
-% pc = Fusion_pointcloud;
-% I = (pc(:,3) < -0.5) | (pc(:,2) < 10) | (pc(:,2) > 50);
-% pc(I,:) = [];
-% 
-% n = size(pc,1);
-% I = randsample(n,min(n,10000));
-% figure(3)
-% clf 
-% grid
-% plot3(pc(I,1), pc(I,2), pc(I,3), '.b', 'MarkerSize', 2)
-% axis equal
-% hold on; 
-%pclviewer(pc') 
+
+return
+
+
+%Pointcloud ROI
+pc = Fusion_pointcloud;
+I = (pc(:,3) < 0) | (pc(:,3) > 3);% | (pc(:,2) < 10) | (pc(:,2) > 50);
+pc(I,:) = [];
+
+n = size(pc,1);
+I = randsample(n,min(n,10000));
+figure(3)
+clf 
+grid
+plot3(pc(I,1), pc(I,2), pc(I,3), '.b', 'MarkerSize', 2)
+axis equal
+hold on; 
+pclviewer(pc') 
  
 
 return

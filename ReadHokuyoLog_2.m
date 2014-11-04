@@ -51,10 +51,10 @@ Lidar_Ranges = Lidar_Log(:, I);
 Lidar_Timestamp_System = Lidar_Log(:, 1);
 
 % Sensor Timestamp
-Lidar_Sensor_Timestamp = Lidar_Log(:, 2) / 1000;
+Lidar_Timestamp_Sensor = Lidar_Log(:, 2) / 1000;
 
 % Combined Timestamp
-Lidar_Timestamp = Lidar_Timestamp_System(1) - Lidar_Sensor_Timestamp(1) + Lidar_Sensor_Timestamp;
+Lidar_Timestamp = Lidar_Timestamp_System(1) - Lidar_Timestamp_Sensor(1) + Lidar_Timestamp_Sensor;
 
 % Scan Index
 Lidar_ScanIndex = (1:Lidar_ScanCount)';

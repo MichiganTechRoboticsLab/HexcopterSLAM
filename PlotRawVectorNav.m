@@ -22,7 +22,7 @@ if ~exist('plot_google_map.m', 'file')
 end
 
 
-% Plot GPS track over a Google Maps image6
+% Plot GPS track over a Google Maps image
 figure(1)
 clf
 plot(GPS_Longitude, GPS_Lattitude, '-r', 'MarkerSize', 1)
@@ -64,8 +64,20 @@ plot(GPS_Timestamp - GPS_Timestamp(1), GPS_Altitude, '.b')
 title('GPS Altitude');
 
 
-% Plot the raw IMU data
+% Identify any missing data
 figure(5)
+clf  
+hold on  
+subplot(2,1,1)
+plot(diff(GPS_Timestamp), '.r')
+title('Missing Data Identification (GPS)')
+subplot(2,1,2)
+plot(diff(IMU_Timestamp), '.b')
+title('Missing Data Identification (IMU)')
+
+
+% Plot the raw IMU data
+figure(6)
 clf
 subplot(3,1,1);
 plot(IMU_Timestamp - IMU_Timestamp(1), rad2deg(IMU_Pitch), '.r')
@@ -76,19 +88,6 @@ title('IMU Roll');
 subplot(3,1,3);
 plot(IMU_Timestamp - IMU_Timestamp(1), rad2deg(IMU_Yaw), '.b')
 title('IMU Yaw');
-
-
-% Identify any missing data
-figure(6)
-clf  
-hold on  
-subplot(2,1,1)
-plot(diff(GPS_Timestamp), '.r')
-title('Missing Data Identification (GPS)')
-subplot(2,1,2)
-plot(diff(IMU_Timestamp), '.b')
-title('Missing Data Identification (IMU)')
-
 
 % Plot all orientations on same spot
 figure(7)
@@ -123,4 +122,14 @@ axis equal
 grid  
 view(63, 24)
        
+% Show the interpolated GPS Location for each IMU message
+figure(10)
+clf
+subplot(2,1,1);
+plot( IMU_MetricPose(:,1))
+subplot(2,1,2);
+plot( IMU_MetricPose(:,2))
+title('ROI Selection Plot');
+
+
 clear zv

@@ -44,7 +44,7 @@ figure(1);
 
 % This is the point in each scan that is detected as the curb
 Curb_Point = [];
-
+Curb_X = Fuse_Curb_X;
 
 % Loop through all scans
 nScanIndex = unique(Lidar_ScanIndex);
@@ -65,7 +65,8 @@ for i = 1:length(nScanIndex)
     I = cs(:,3) < Fuse_Diff_ROI_Z_min | cs(:,3) > Fuse_Diff_ROI_Z_max;
     cs(I,:) = [];
     
-    start_ROI = Fuse_Curb_X - Fuse_Diff_ROI_width;
+    % ROI (X)
+    start_ROI = Curb_X - Fuse_Diff_ROI_width;
     if start_ROI < 1 
         start_ROI = 1;
     end
@@ -74,7 +75,7 @@ for i = 1:length(nScanIndex)
         end_ROI = size( cs, 1);
     end
     
-    ROIx = start_ROI:end_ROI;
+    ROIx = (start_ROI:end_ROI)';
     ROIy = cs(start_ROI:end_ROI, :);
     
     
@@ -95,7 +96,7 @@ for i = 1:length(nScanIndex)
     Curb_Point(i,:) = cs(xMax,:);
     
     % Update the ROI center
-    Fuse_Curb_X = xMax;
+    Curb_X = xMax;
   
     
 % 
@@ -105,29 +106,28 @@ for i = 1:length(nScanIndex)
         set(0, 'CurrentFigure', 1);
         clf;
 
-    %     Curb ROI Display
+        % Curb ROI Display
         subplot(4,1,1);
-        plot(cs(:,3), '.r');
         plot(ROIx, ROIy(:,3), '.b');
         title(['Scan:' num2str(nIndex)]);
 
-    %     Low pass filter
+        % Low pass filter
         subplot(4,1,2);
         plot(ROIx, f, '.b');
         title('Low Pass Filter');
 
-    %     First Diff display
+        % First Diff display
         subplot(4,1,3);
         plot(ROIx(2:end), d, '-r');
         title('First Order Diff');
 
-    %     Low pass filter
+        % Low pass filter
         subplot(4,1,4);
         plot(ROIx(2:end), F, '-r');
         title('Low Pass Filter');
 
 
-    %     Curb Location Displays 
+        % Curb Location Displays 
         subplot(4,1,1);
         hold on;
         plot([xMax xMax], [min(ROIy(:,3)) max(ROIy(:,3))], '-g');
@@ -153,7 +153,7 @@ end
 pointcloud = pc;
 
 
-% Translate each scan so that the curb point lines up
+%% Translate each scan so that the curb point lines up
 % (scratch/point2line.m - may help understand this code segment)
 start_pt = Curb_Point(1,:);
 end_pt   = Curb_Point(end,:);

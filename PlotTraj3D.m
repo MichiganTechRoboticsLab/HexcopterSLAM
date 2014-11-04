@@ -9,9 +9,10 @@ function PlotTraj3D(P, Q, AxisVectorLength)
         Q = zeros(size(x, 4));
         Q(:,1) = 1;
     end
-    if ~exist('l', 'var') 
-        l = 1;
+    if ~exist('AxisVectorLength', 'var') 
+        AxisVectorLength = 1;
     end
+
 
     % Check array lengths
     if size(P, 1) ~= size(Q, 1)
@@ -19,10 +20,7 @@ function PlotTraj3D(P, Q, AxisVectorLength)
     end
     
     % Axis Vectors
-    AxisVectors = [[1 0 0]
-                   [0 1 0] 
-                   [0 0 1]]; 
-    AxisVectors = AxisVectors  * AxisVectorLength;
+    AxisVectors = eye(3) * AxisVectorLength;
 
     % Rotate
     Ax = quatrotate(Q, AxisVectors(1,:));

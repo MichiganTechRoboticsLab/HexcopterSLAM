@@ -9,6 +9,18 @@
 %  data arrays may not be the same length!
 
 
+
+if ~exist('IMU_YawBias', 'var') 
+        IMU_YawBias = 0;
+end
+if ~exist('IMU_RollBias', 'var') 
+        IMU_RollBias = 0;
+end
+if ~exist('IMU_PitchBias', 'var') 
+        IMU_PitchBias = 0;
+end
+
+
 % Extract GPS coodinates
 
 % Ignore entries where no GPS data was available
@@ -28,18 +40,28 @@ i = VectorNav_Log(:,5) ~= 0;
 
 IMU_Timestamp = VectorNav_Log(i,1);
 
-% Quaternion format: X Y Z W
+% VectorNav Quaternion format: X Y Z W
+% Matlab Quaternion format:    W X Y Z
 IMU_Q = [VectorNav_Log(i,8) VectorNav_Log(i,5:7)];
 
 % Convert to YPR
-[IMU_Yaw, IMU_Roll, IMU_Pitch] = quat2angle(IMU_Q);
+[IMU_Yaw, IMU_Pitch, IMU_Roll] = quat2angle(IMU_Q, 'ZYX');
+
+% IMU Bias 
+IMU_Yaw   = IMU_Yaw   + deg2rad(IMU_YawBias);
+IMU_Roll  = IMU_Roll  + deg2rad(IMU_RollBias);
+IMU_Pitch = IMU_Pitch + deg2rad(IMU_PitchBias);
+
 
 % NOTE: Matlab quaternion functions use a NED coord system, so the usual 
-% rotations will produce negitive results, that's why they are negated here.
-IMU_Yaw   = -1 * IMU_Yaw;
-IMU_Roll  = -1 * IMU_Roll;
-IMU_Pitch = -1 * IMU_Pitch;
+% rotations will produce negitive results, that's why they are negated
+% here and the X and Y axis are swapped above.
+IMU_Yaw   =  -1 * IMU_Yaw;
+IMU_Roll  =  -1 * IMU_Roll;
+IMU_Pitch =  -1 * IMU_Pitch;
 
+% Save Coordinate inversions
+IMU_Q = angle2quat(IMU_Pitch, IMU_Roll, IMU_Yaw, 'XYZ');
 
 
 % Convert from LLA to Flat Earth (Metric) coodinates
